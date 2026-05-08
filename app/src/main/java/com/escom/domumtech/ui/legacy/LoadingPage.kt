@@ -1,10 +1,10 @@
-package com.example.domumtech.ui
-import com.example.domumtech.R
+package com.escom.domumtech.ui.legacy
+import com.escom.domumtech.R
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.DomumtechTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp

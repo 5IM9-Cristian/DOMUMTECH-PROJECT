@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Domumtech</string>
+    <string name="domumtech_name">Domumtech</string>
+    <string name="loading_message">Cargando...</string>
+    <string name="mensaje_introduccion">Tu hogar inteligente, más cerca que nunca.</string>
+    <string name="inicio_sesion">Iniciar Sesión</string>
+    <string name="registrarse">Registrarse</string>
 </resources>

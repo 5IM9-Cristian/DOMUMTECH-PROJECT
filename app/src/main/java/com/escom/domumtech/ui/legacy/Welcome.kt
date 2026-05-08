@@ -1,14 +1,14 @@
-package com.example.domumtech.ui
+package com.escom.domumtech.ui.legacy
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import com.example.domumtech.R
+import com.escom.domumtech.R
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.DomumtechTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -32,7 +32,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import com.example.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.dynamicGradient
 
 @Composable
 fun Welcome(){
