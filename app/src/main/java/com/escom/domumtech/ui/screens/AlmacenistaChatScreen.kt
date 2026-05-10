@@ -1,13 +1,13 @@
 package com.escom.domumtech.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -21,17 +21,24 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+
+data class Message(val text: String, val isUser: Boolean, val time: String)
 
 @Composable
-fun AlmacenistaChatScreen() {
-    val scrollState = rememberScrollState()
+fun AlmacenistaChatScreen(navController: NavController) {
     val mainGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
     )
+    
+    var userMessage by remember { mutableStateOf("") }
+    val messages = remember { mutableStateListOf(
+        Message("¡Hola! Soy tu Almacenista Virtual. Puedo ayudarte a gestionar tu inventario, sugerir recetas con lo que tienes disponible, o responder cualquier pregunta sobre tus productos. ¿En qué puedo asistirte?", false, "04:35 p.m.")
+    ) }
+    
+    val listState = rememberLazyListState()
 
     Scaffold(
         topBar = {
@@ -47,17 +54,19 @@ fun AlmacenistaChatScreen() {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Volver",
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(
                                 text = "Almacenista Virtual",
-                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
+                                style = TextStyle(fontSize = 20.sp, color = Color.White)
                             )
                             Text(
                                 text = "Asistente inteligente",
@@ -89,8 +98,8 @@ fun AlmacenistaChatScreen() {
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = userMessage,
+                        onValueChange = { userMessage = it },
                         placeholder = { Text("Escribe tu mensaje...", color = Color.LightGray) },
                         modifier = Modifier
                             .weight(1f)
@@ -102,20 +111,24 @@ fun AlmacenistaChatScreen() {
                             unfocusedContainerColor = Color.White,
                             focusedBorderColor = Color.Transparent,
                             unfocusedBorderColor = Color.Transparent
-                        )
+                        ),
+                        singleLine = true
                     )
                     Box(
                         modifier = Modifier
                             .size(56.dp)
                             .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.2f))
-                            .clickable { },
+                            .background(if (userMessage.isNotBlank()) Color.White else Color.White.copy(alpha = 0.4f))
+                            .clickable(enabled = userMessage.isNotBlank()) { 
+                                messages.add(Message(userMessage, true, "Ahora"))
+                                userMessage = ""
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = "Enviar",
-                            tint = Color.White,
+                            tint = if (userMessage.isNotBlank()) Color(0xFFDC7176) else Color.White,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -123,72 +136,92 @@ fun AlmacenistaChatScreen() {
             }
         }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(paddingValues)
-                .padding(24.dp)
-                .verticalScroll(scrollState)
+                .padding(horizontal = 24.dp),
+            contentPadding = PaddingValues(top = 24.dp, bottom = 24.dp)
         ) {
-            // Mensaje de Bienvenida del Bot
-            Box(
-                modifier = Modifier
-                    .width(280.dp)
-                    .shadow(elevation = 6.dp, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 6.dp, bottomEnd = 16.dp))
-                    .background(Color.White, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 6.dp, bottomEnd = 16.dp))
-                    .padding(16.dp)
-            ) {
-                Column {
-                    Text(
-                        text = "¡Hola! Soy tu Almacenista Virtual. Puedo ayudarte a gestionar tu inventario, sugerir recetas con lo que tienes disponible, o responder cualquier pregunta sobre tus productos. ¿En qué puedo asistirte?",
-                        style = TextStyle(fontSize = 14.sp, lineHeight = 22.sp, color = Color(0xFF1A1A1A))
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "04:35 p.m.",
-                        modifier = Modifier.align(Alignment.End),
-                        style = TextStyle(fontSize = 12.sp, color = Color(0xFFDE8948).copy(alpha = 0.7f))
-                    )
-                }
+            items(messages) { message ->
+                ChatBubble(message)
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // Sugerencias Section
-            Text(
-                text = "Sugerencias:",
-                style = TextStyle(fontSize = 12.sp, color = Color(0xFFDE8948).copy(alpha = 0.8f))
-            )
-            Spacer(modifier = Modifier.height(12.dp))
             
-            val suggestions = listOf(
-                "¿Qué puedo cocinar hoy?",
-                "¿Qué necesito comprar?",
-                "Muestra mi inventario"
-            )
-
-            suggestions.forEach { suggestion ->
-                Box(
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
-                        .shadow(elevation = 3.dp, shape = RoundedCornerShape(20.dp))
-                        .background(Color.White, RoundedCornerShape(20.dp))
-                        .clickable { }
-                        .padding(horizontal = 20.dp, vertical = 10.dp)
-                ) {
-                    Text(
-                        text = suggestion,
-                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
-                    )
-                }
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+                SuggestionsSection(onSuggestionClick = { suggestion ->
+                    messages.add(Message(suggestion, true, "Ahora"))
+                })
             }
         }
     }
 }
 
-@Preview(showBackground = true, widthDp = 393, heightDp = 853)
 @Composable
-fun AlmacenistaChatScreenPreview() {
-    AlmacenistaChatScreen()
+fun ChatBubble(message: Message) {
+    val alignment = if (message.isUser) Alignment.CenterEnd else Alignment.CenterStart
+    val bubbleColor = if (message.isUser) Color(0xFFFFF9F2) else Color.White
+    val shape = if (message.isUser) 
+        RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 6.dp)
+    else 
+        RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 6.dp, bottomEnd = 16.dp)
+
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = alignment) {
+        Card(
+            modifier = Modifier
+                .widthIn(max = 280.dp)
+                .shadow(elevation = 4.dp, shape = shape),
+            shape = shape,
+            colors = CardDefaults.cardColors(containerColor = bubbleColor)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = message.text,
+                    style = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, color = Color(0xFF1A1A1A))
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = message.time,
+                    modifier = Modifier.align(Alignment.End),
+                    style = TextStyle(fontSize = 12.sp, color = Color(0xFFDE8948).copy(alpha = 0.7f))
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SuggestionsSection(onSuggestionClick: (String) -> Unit) {
+    Column {
+        Text(
+            text = "Sugerencias:",
+            style = TextStyle(fontSize = 12.sp, color = Color(0xFFDE8948).copy(alpha = 0.8f))
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        
+        val suggestions = listOf(
+            "¿Qué puedo cocinar hoy?",
+            "¿Qué necesito comprar?",
+            "Muestra mi inventario"
+        )
+
+        suggestions.forEach { suggestion ->
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .shadow(elevation = 2.dp, shape = RoundedCornerShape(20.dp))
+                    .background(Color.White, RoundedCornerShape(20.dp))
+                    .clickable { onSuggestionClick(suggestion) }
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+            ) {
+                Text(
+                    text = suggestion,
+                    style = TextStyle(fontSize = 14.sp, color = Color(0xFF1A1A1A))
+                )
+            }
+        }
+    }
 }

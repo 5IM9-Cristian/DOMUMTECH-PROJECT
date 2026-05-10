@@ -22,13 +22,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.escom.domumtech.navigation.Screen
 
 @Composable
-fun AltaProductoScreen() {
+fun AltaProductoScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
     )
+    
+    // Estados para los campos
+    var productName by remember { mutableStateOf("") }
     var quantity by remember { mutableIntStateOf(1) }
 
     Scaffold(
@@ -39,17 +44,23 @@ fun AltaProductoScreen() {
                     .padding(24.dp)
             ) {
                 Button(
-                    onClick = { },
+                    onClick = { 
+                        // Aquí iría la lógica para guardar
+                        navController.navigate(Screen.Dashboard.route)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
                         .shadow(elevation = 8.dp, shape = RoundedCornerShape(14.dp)),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     contentPadding = PaddingValues(),
-                    shape = RoundedCornerShape(14.dp)
+                    shape = RoundedCornerShape(14.dp),
+                    enabled = productName.isNotBlank() // Solo habilitar si hay nombre
                 ) {
                     Box(
-                        modifier = Modifier.fillMaxSize().background(mainGradient),
+                        modifier = Modifier.fillMaxSize().background(
+                            if (productName.isNotBlank()) mainGradient else Brush.linearGradient(listOf(Color.LightGray, Color.LightGray))
+                        ),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -70,7 +81,7 @@ fun AltaProductoScreen() {
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
         ) {
-            // Header con Gradiente
+            // Header
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,12 +89,14 @@ fun AltaProductoScreen() {
                     .padding(24.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Volver",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = "Alta de Producto",
@@ -113,7 +126,10 @@ fun AltaProductoScreen() {
                                 .height(160.dp)
                                 .background(Color(0xFFFFF9F2), RoundedCornerShape(14.dp))
                                 .border(1.5.dp, Color(0xFFE89E5B).copy(alpha = 0.4f), RoundedCornerShape(14.dp))
-                                .clickable { },
+                                .clickable { 
+                                    // Simulación de OCR
+                                    productName = "Leche Entera" 
+                                },
                             contentAlignment = Alignment.Center
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -150,15 +166,16 @@ fun AltaProductoScreen() {
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
-                            value = "",
-                            onValueChange = {},
-                            placeholder = { Text("Arroz Integral", color = Color.LightGray) },
+                            value = productName,
+                            onValueChange = { productName = it },
+                            placeholder = { Text("Ej: Arroz Integral", color = Color.LightGray) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(14.dp),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = Color(0xFFE89E5B).copy(alpha = 0.5f),
                                 unfocusedBorderColor = Color.LightGray.copy(alpha = 0.5f)
-                            )
+                            ),
+                            singleLine = true
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -178,9 +195,7 @@ fun AltaProductoScreen() {
                                     .size(40.dp)
                                     .background(Color(0xFFDC7176).copy(alpha = 0.7f), RoundedCornerShape(8.dp))
                             ) {
-                                Box(
-                                    modifier = Modifier.width(16.dp).height(2.dp).background(Color.White)
-                                )
+                                Box(modifier = Modifier.width(16.dp).height(2.dp).background(Color.White))
                             }
                             Text(
                                 text = quantity.toString(),
@@ -200,10 +215,4 @@ fun AltaProductoScreen() {
             }
         }
     }
-}
-
-@Preview(showBackground = true, widthDp = 393, heightDp = 853)
-@Composable
-fun AltaProductoScreenPreview() {
-    AltaProductoScreen()
 }

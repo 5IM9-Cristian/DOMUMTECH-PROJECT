@@ -20,12 +20,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
-fun CambioPasswordScreen() {
+fun CambioPasswordScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
@@ -58,12 +58,14 @@ fun CambioPasswordScreen() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Volver",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(
@@ -138,17 +140,21 @@ fun CambioPasswordScreen() {
 
             // Update Button
             Button(
-                onClick = { },
+                onClick = { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
                     .shadow(elevation = 8.dp, shape = RoundedCornerShape(14.dp)),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 contentPadding = PaddingValues(),
-                shape = RoundedCornerShape(14.dp)
+                shape = RoundedCornerShape(14.dp),
+                enabled = currentPassword.isNotEmpty() && newPassword.isNotEmpty() && confirmPassword.isNotEmpty()
             ) {
                 Box(
-                    modifier = Modifier.fillMaxSize().background(mainGradient),
+                    modifier = Modifier.fillMaxSize().background(
+                        if (currentPassword.isNotEmpty() && newPassword.isNotEmpty() && confirmPassword.isNotEmpty()) mainGradient 
+                        else Brush.linearGradient(listOf(Color.LightGray, Color.LightGray))
+                    ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -191,7 +197,7 @@ fun PasswordTextField(
             trailingIcon = {
                 IconButton(onClick = onVisibilityChange) {
                     Icon(
-                        imageVector = if (isVisible) Icons.Default.Lock else Icons.Default.Lock,
+                        imageVector = if (isVisible) Icons.Default.Info else Icons.Default.Lock,
                         contentDescription = null,
                         tint = Color.LightGray.copy(alpha = 0.5f)
                     )
@@ -200,13 +206,8 @@ fun PasswordTextField(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFFDC7176).copy(alpha = 0.5f),
                 unfocusedBorderColor = Color(0x4DCDD7D8)
-            )
+            ),
+            singleLine = true
         )
     }
-}
-
-@Preview(showBackground = true, widthDp = 393, heightDp = 853)
-@Composable
-fun CambioPasswordScreenPreview() {
-    CambioPasswordScreen()
 }
