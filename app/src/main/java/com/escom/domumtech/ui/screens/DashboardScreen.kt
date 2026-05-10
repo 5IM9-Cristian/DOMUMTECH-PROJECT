@@ -26,10 +26,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.escom.domumtech.navigation.Screen
 import kotlinx.coroutines.launch
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
@@ -45,7 +47,7 @@ fun DashboardScreen() {
                 drawerShape = RoundedCornerShape(0.dp),
                 modifier = Modifier.width(320.dp)
             ) {
-                DrawerContent(mainGradient)
+                DrawerContent(mainGradient, navController, drawerState)
             }
         }
     ) {
@@ -104,7 +106,8 @@ fun DashboardScreen() {
                             Box(
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(12.dp)),
+                                    .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+                                    .clickable { navController.navigate(Screen.Ayuda.route) },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(Icons.Default.Info, contentDescription = "Ayuda", tint = Color.White)
@@ -112,7 +115,8 @@ fun DashboardScreen() {
                             Box(
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(12.dp)),
+                                    .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+                                    .clickable { navController.navigate(Screen.MiCuenta.route) },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(Icons.Default.Person, contentDescription = "Perfil", tint = Color.White)
@@ -159,18 +163,51 @@ fun DashboardScreen() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                ActionItem(title = "Alta de Producto", subtitle = "Escanear o ingresar manualmente", icon = Icons.Default.AddCircle)
-                ActionItem(title = "Baja de Producto", subtitle = "Retirar productos del inventario", icon = Icons.Default.Delete)
-                ActionItem(title = "Inventario Compartido", subtitle = "Ver productos de la familia", icon = Icons.Default.Face)
-                ActionItem(title = "Lista de Compras", subtitle = "Productos por adquirir", icon = Icons.Default.ShoppingCart)
-                ActionItem(title = "Almacenista Virtual", subtitle = "Asistente inteligente", icon = Icons.Default.Info)
+                ActionItem(
+                    title = "Alta de Producto", 
+                    subtitle = "Escanear o ingresar manualmente", 
+                    icon = Icons.Default.AddCircle,
+                    onClick = { navController.navigate(Screen.AltaProducto.route) }
+                )
+                ActionItem(
+                    title = "Baja de Producto", 
+                    subtitle = "Retirar productos del inventario", 
+                    icon = Icons.Default.Delete,
+                    onClick = { navController.navigate(Screen.BajaProducto.route) }
+                )
+                ActionItem(
+                    title = "Inventario Compartido", 
+                    subtitle = "Ver productos de la familia", 
+                    icon = Icons.Default.Face,
+                    onClick = { navController.navigate(Screen.InventarioCompartido.route) }
+                )
+                ActionItem(
+                    title = "Lista de Compras", 
+                    subtitle = "Productos por adquirir", 
+                    icon = Icons.Default.ShoppingCart,
+                    onClick = { navController.navigate(Screen.ListaCompras.route) }
+                )
+                ActionItem(
+                    title = "Almacenista Virtual", 
+                    subtitle = "Asistente inteligente", 
+                    icon = Icons.Default.Info,
+                    onClick = { navController.navigate(Screen.AlmacenistaChat.route) }
+                )
             }
         }
     }
 }
 
 @Composable
-fun DrawerContent(gradient: Brush) {
+fun DrawerContent(gradient: Brush, navController: NavController, drawerState: DrawerState) {
+    val scope = rememberCoroutineScope()
+    fun navigate(route: String) {
+        scope.launch {
+            drawerState.close()
+            navController.navigate(route)
+        }
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         // Drawer Header
         Box(
@@ -189,7 +226,9 @@ fun DrawerContent(gradient: Brush) {
                         text = "Menú",
                         style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
                     )
-                    Icon(Icons.Default.Close, contentDescription = "Close", tint = Color.White)
+                    IconButton(onClick = { scope.launch { drawerState.close() } }) {
+                        Icon(Icons.Default.Close, contentDescription = "Close", tint = Color.White)
+                    }
                 }
                 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -199,6 +238,7 @@ fun DrawerContent(gradient: Brush) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.White.copy(alpha = 0.15f), RoundedCornerShape(14.dp))
+                        .clickable { navigate(Screen.MiCuenta.route) }
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -234,30 +274,31 @@ fun DrawerContent(gradient: Brush) {
                 .verticalScroll(rememberScrollState())
                 .padding(vertical = 8.dp)
         ) {
-            DrawerItem(icon = Icons.Default.Home, label = "Inicio")
+            DrawerItem(icon = Icons.Default.Home, label = "Inicio", onClick = { navigate(Screen.Dashboard.route) })
             HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp), color = Color.LightGray.copy(alpha = 0.5f))
             
-            DrawerItem(icon = Icons.Default.AddCircle, label = "Alta de Producto")
-            DrawerItem(icon = Icons.Default.Delete, label = "Baja de Producto")
-            DrawerItem(icon = Icons.Default.Face, label = "Inventario Compartido")
-            DrawerItem(icon = Icons.Default.ShoppingCart, label = "Lista de Compras")
-            DrawerItem(icon = Icons.Default.Info, label = "Almacenista Virtual")
+            DrawerItem(icon = Icons.Default.AddCircle, label = "Alta de Producto", onClick = { navigate(Screen.AltaProducto.route) })
+            DrawerItem(icon = Icons.Default.Delete, label = "Baja de Producto", onClick = { navigate(Screen.BajaProducto.route) })
+            DrawerItem(icon = Icons.Default.Face, label = "Inventario Compartido", onClick = { navigate(Screen.InventarioCompartido.route) })
+            DrawerItem(icon = Icons.Default.ShoppingCart, label = "Lista de Compras", onClick = { navigate(Screen.ListaCompras.route) })
+            DrawerItem(icon = Icons.Default.Info, label = "Almacenista Virtual", onClick = { navigate(Screen.AlmacenistaChat.route) })
             
             HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp), color = Color.LightGray.copy(alpha = 0.5f))
             
-            DrawerItem(icon = Icons.Default.Person, label = "Mi Cuenta")
-            DrawerItem(icon = Icons.Default.Info, label = "Ayuda")
+            DrawerItem(icon = Icons.Default.Person, label = "Mi Cuenta", onClick = { navigate(Screen.MiCuenta.route) })
+            DrawerItem(icon = Icons.Default.Info, label = "Ayuda", onClick = { navigate(Screen.Ayuda.route) })
             
             Spacer(modifier = Modifier.weight(1f))
             
             HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp), color = Color.LightGray.copy(alpha = 0.5f))
             
-            DrawerItem(icon = Icons.Default.Settings, label = "Configuración")
+            DrawerItem(icon = Icons.Default.Settings, label = "Configuración", onClick = { navigate(Screen.Configuracion.route) })
             DrawerItem(
                 icon = Icons.AutoMirrored.Filled.ExitToApp,
                 label = "Cerrar Sesión",
                 labelColor = Color(0xFFE7000B),
-                iconTint = Color(0xFFE7000B)
+                iconTint = Color(0xFFE7000B),
+                onClick = { navigate(Screen.Welcome.route) }
             )
         }
     }
@@ -268,12 +309,13 @@ fun DrawerItem(
     icon: ImageVector,
     label: String,
     labelColor: Color = Color(0xFF1A1A1A),
-    iconTint: Color = Color.Gray
+    iconTint: Color = Color.Gray,
+    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable(onClick = onClick)
             .padding(horizontal = 24.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -308,12 +350,13 @@ fun StatCard(modifier: Modifier = Modifier, label: String, value: String) {
 }
 
 @Composable
-fun ActionItem(title: String, subtitle: String, icon: ImageVector) {
+fun ActionItem(title: String, subtitle: String, icon: ImageVector, onClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(14.dp)),
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(14.dp))
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -334,10 +377,4 @@ fun ActionItem(title: String, subtitle: String, icon: ImageVector) {
             }
         }
     }
-}
-
-@Preview(showBackground = true, widthDp = 393, heightDp = 853)
-@Composable
-fun DashboardScreenPreview() {
-    DashboardScreen()
 }

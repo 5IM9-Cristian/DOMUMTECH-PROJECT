@@ -14,9 +14,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.escom.domumtech.navigation.Screen
 
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -33,7 +35,7 @@ fun WelcomeScreen() {
         )
         Spacer(modifier = Modifier.height(48.dp))
         Button(
-            onClick = { },
+            onClick = { navController.navigate(Screen.Login.route) },
             modifier = Modifier.fillMaxWidth().height(56.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDC7176))
         ) {
@@ -41,16 +43,10 @@ fun WelcomeScreen() {
         }
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedButton(
-            onClick = { },
+            onClick = { navController.navigate(Screen.Registro.route) },
             modifier = Modifier.fillMaxWidth().height(56.dp)
         ) {
             Text("Registrarse", color = Color(0xFFDC7176))
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun WelcomeScreenPreview() {
-    WelcomeScreen()
 }

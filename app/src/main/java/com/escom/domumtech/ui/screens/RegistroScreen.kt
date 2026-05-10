@@ -29,16 +29,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.escom.domumtech.R
+import com.escom.domumtech.navigation.Screen
 
 @Composable
-fun RegistroScreen() {
+fun RegistroScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
     )
     val backgroundColor = Color(0xFFFFF9F2)
     val secondaryTextColor = Color(0xFFF2A666)
+    
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -60,7 +65,7 @@ fun RegistroScreen() {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
@@ -88,7 +93,6 @@ fun RegistroScreen() {
                 .background(mainGradient, RoundedCornerShape(20.dp)),
             contentAlignment = Alignment.Center
         ) {
-            // Icono de casa
             Icon(
                 imageVector = Icons.Default.Home,
                 contentDescription = null,
@@ -139,30 +143,21 @@ fun RegistroScreen() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Campo Correo
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = null,
-                    tint = secondaryTextColor.copy(alpha = 0.7f),
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "tu@email.com",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = Color.LightGray,
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                placeholder = { Text("tu@email.com", color = Color.LightGray) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Email,
+                        contentDescription = null,
+                        tint = secondaryTextColor.copy(alpha = 0.7f),
+                        modifier = Modifier.size(20.dp)
                     )
-                )
-            }
+                }
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -177,30 +172,21 @@ fun RegistroScreen() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Campo Contraseña
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = null,
-                    tint = secondaryTextColor.copy(alpha = 0.7f),
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "••••••••",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = Color.LightGray,
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                placeholder = { Text("••••••••", color = Color.LightGray) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        tint = secondaryTextColor.copy(alpha = 0.7f),
+                        modifier = Modifier.size(20.dp)
                     )
-                )
-            }
+                }
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -215,9 +201,8 @@ fun RegistroScreen() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Botón Iniciar Sesión con Gradiente
             Button(
-                onClick = { },
+                onClick = { navController.navigate(Screen.Dashboard.route) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
@@ -245,7 +230,6 @@ fun RegistroScreen() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -264,7 +248,6 @@ fun RegistroScreen() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Botón Google
             OutlinedButton(
                 onClick = { },
                 modifier = Modifier
@@ -278,7 +261,6 @@ fun RegistroScreen() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    // Simulación simple del icono de Google
                     Box(
                         modifier = Modifier
                             .size(24.dp)
@@ -309,10 +291,4 @@ fun RegistroScreen() {
             Spacer(modifier = Modifier.height(40.dp))
         }
     }
-}
-
-@Preview(showBackground = true, widthDp = 393, heightDp = 853)
-@Composable
-fun RegistroScreenPreview() {
-    RegistroScreen()
 }

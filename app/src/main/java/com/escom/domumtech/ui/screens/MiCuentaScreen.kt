@@ -22,12 +22,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.escom.domumtech.navigation.Screen
 
 @Composable
-fun MiCuentaScreen() {
+fun MiCuentaScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
@@ -51,12 +52,14 @@ fun MiCuentaScreen() {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(bottom = 24.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Volver",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = "Mi Cuenta",
@@ -97,7 +100,6 @@ fun MiCuentaScreen() {
         }
 
         Column(modifier = Modifier.padding(24.dp)) {
-            // Información Personal Section
             SectionHeader(title = "Información Personal")
             Card(
                 modifier = Modifier
@@ -117,7 +119,6 @@ fun MiCuentaScreen() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Miembros del Grupo Section
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -128,7 +129,7 @@ fun MiCuentaScreen() {
                     style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
                 )
                 Button(
-                    onClick = { },
+                    onClick = { navController.navigate(Screen.MiembrosPlan.route) },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE89E5B).copy(alpha = 0.8f)),
                     shape = RoundedCornerShape(12.dp),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
@@ -157,13 +158,13 @@ fun MiCuentaScreen() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Footer Options
-            FooterOption(icon = Icons.Default.Star, label = "Planes y Membresía")
-            FooterOption(icon = Icons.Default.Settings, label = "Configuración")
+            FooterOption(icon = Icons.Default.Star, label = "Planes y Membresía", onClick = { navController.navigate(Screen.PlanesMembresia.route) })
+            FooterOption(icon = Icons.Default.Settings, label = "Configuración", onClick = { navController.navigate(Screen.Configuracion.route) })
             FooterOption(
                 icon = Icons.AutoMirrored.Filled.ExitToApp,
                 label = "Cerrar Sesión",
-                color = Color(0xFFE7000B)
+                color = Color(0xFFE7000B),
+                onClick = { navController.navigate(Screen.Welcome.route) }
             )
             
             Spacer(modifier = Modifier.height(40.dp))
@@ -221,18 +222,18 @@ fun MemberItem(name: String, email: String, role: String, initial: String) {
             Box(
                 modifier = Modifier
                     .size(8.dp)
-                    .background(Color(0xFF00C950), CircleShape)
+                    .background(Color(0xFF05DF72), CircleShape)
             )
         }
     }
 }
 
 @Composable
-fun FooterOption(icon: ImageVector, label: String, color: Color = Color(0xFF1A1A1A)) {
+fun FooterOption(icon: ImageVector, label: String, color: Color = Color(0xFF1A1A1A), onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable(onClick = onClick)
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -240,10 +241,4 @@ fun FooterOption(icon: ImageVector, label: String, color: Color = Color(0xFF1A1A
         Spacer(modifier = Modifier.width(16.dp))
         Text(text = label, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = color)
     }
-}
-
-@Preview(showBackground = true, widthDp = 393, heightDp = 1144)
-@Composable
-fun MiCuentaScreenPreview() {
-    MiCuentaScreen()
 }

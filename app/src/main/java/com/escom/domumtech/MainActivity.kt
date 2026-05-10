@@ -7,18 +7,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.escom.domumtech.ui.screens.RegistroScreen
+import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.navigation.NavGraph
+import com.escom.domumtech.ui.theme.DomumtechTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            DomumtechTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    RegistroScreen()
+                    val navController = rememberNavController()
+                    NavGraph(navController = navController)
                 }
             }
         }
