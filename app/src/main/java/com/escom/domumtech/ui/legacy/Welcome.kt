@@ -81,7 +81,7 @@ fun LogoImageWelcome(){
             color = Color.White
         )
         Text(
-            text = stringResource(R.string.mensaje_introduccion),
+            text = "texto",
             fontSize = 15.sp,
             fontWeight = FontWeight.Light,
             textAlign = TextAlign.Center,
@@ -115,7 +115,7 @@ fun BotonesDeSesion(){
             )
         ) {
             Text(
-                text = stringResource(R.string.inicio_sesion),
+                text = stringResource(R.string.ingresar),
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold
             )

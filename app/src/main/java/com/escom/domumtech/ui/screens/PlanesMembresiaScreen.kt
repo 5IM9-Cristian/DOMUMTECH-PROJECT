@@ -25,9 +25,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun PlanesMembresiaScreen() {
+fun PlanesMembresiaScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
@@ -293,5 +295,6 @@ fun BenefitItem(modifier: Modifier = Modifier, icon: ImageVector, title: String,
 @Preview(showBackground = true, widthDp = 393, heightDp = 1250)
 @Composable
 fun PlanesMembresiaScreenPreview() {
-    PlanesMembresiaScreen()
+    val navController = rememberNavController()
+    PlanesMembresiaScreen(navController = navController)
 }

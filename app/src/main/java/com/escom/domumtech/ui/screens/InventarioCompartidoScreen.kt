@@ -1,5 +1,5 @@
 package com.escom.domumtech.ui.screens
-
+import com.escom.domumtech.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -18,43 +18,49 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.SetupEdgeToEdge
+import com.escom.domumtech.ui.theme.cardsColor
+import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 
 @Composable
-fun InventarioCompartidoScreen() {
+fun InventarioCompartidoScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    val mainGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
-    )
-
+    SetupEdgeToEdge()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(scrollState)
     ) {
         // Header con Miembros Activos
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(mainGradient, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                .background(MaterialTheme.colorScheme.dynamicGradient(), shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                .statusBarsPadding()
                 .padding(24.dp)
         ) {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
+                    Icon(//Hay que corregirse porque tiene que ser un boton
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Volver",
+                        contentDescription = stringResource(R.string.volver),
                         tint = Color.White,
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = "Inventario Compartido",
+                        text = stringResource(R.string.inventario_compartido_title),
                         style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
                     )
                 }
@@ -73,7 +79,7 @@ fun InventarioCompartidoScreen() {
                             Icon(Icons.Default.AccountCircle, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Miembros Activos",
+                                text = stringResource(R.string.miembros_activos),
                                 style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.White)
                             )
                         }
@@ -94,11 +100,11 @@ fun InventarioCompartidoScreen() {
 
         Column(modifier = Modifier.padding(24.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.List, contentDescription = null, tint = Color(0xFF1A1A1A), modifier = Modifier.size(20.dp))
+                Icon(Icons.Default.List, contentDescription = null, tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Productos Disponibles",
-                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                    text = stringResource(R.string.productos_disponibles),
+                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground)
                 )
             }
 
@@ -155,7 +161,7 @@ fun SharedProductCard(product: SharedProduct) {
             .fillMaxWidth()
             .shadow(elevation = 4.dp, shape = RoundedCornerShape(14.dp)),
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.cardsColor())
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -168,10 +174,10 @@ fun SharedProductCard(product: SharedProduct) {
                     modifier = Modifier
                         .size(28.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFFDC7176).copy(alpha = 0.1f)),
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = product.stock.toString(), color = Color(0xFFDC7176), fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                    Text(text = product.stock.toString(), color = MaterialTheme.colorScheme.primary, fontSize = 14.sp, fontWeight = FontWeight.Medium)
                 }
             }
             
@@ -184,14 +190,14 @@ fun SharedProductCard(product: SharedProduct) {
             ) {
                 Box(
                     modifier = Modifier
-                        .border(1.dp, Color(0xFFE89E5B).copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+                        .border(1.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
                         .padding(horizontal = 8.dp, vertical = 2.dp)
                 ) {
-                    Text(text = product.category, color = Color(0xFFE89E5B), fontSize = 12.sp)
+                    Text(text = product.category, color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp)
                 }
                 Text(
-                    text = "Actualizado por ${product.updatedBy}",
-                    style = TextStyle(fontSize = 12.sp, color = Color.LightGray)
+                    text = "${stringResource(R.string.actualizado_por)} ${product.updatedBy}",
+                    style = TextStyle(fontSize = 12.sp, color = MaterialTheme.colorScheme.placeholderColor())
                 )
             }
         }
@@ -201,5 +207,8 @@ fun SharedProductCard(product: SharedProduct) {
 @Preview(showBackground = true, widthDp = 393, heightDp = 853)
 @Composable
 fun InventarioCompartidoScreenPreview() {
-    InventarioCompartidoScreen()
+    DomumtechTheme() {
+        val navController = rememberNavController()
+        InventarioCompartidoScreen(navController = navController)
+    }
 }

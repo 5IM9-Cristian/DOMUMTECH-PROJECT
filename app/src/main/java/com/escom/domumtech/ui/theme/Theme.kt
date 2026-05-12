@@ -18,35 +18,38 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-val GradientLight = Brush.linearGradient(
-    colors = listOf(Color(0xFFE07970), Color(0xFFDE8948))
-)
-
-val GradientDark = Brush.linearGradient(
-    colors = listOf(Color(0xFF163E8D), Color(0xFF729AE9))
-)
-
+@Composable
+fun ColorScheme.escaner():Color = if(isSystemInDarkTheme()) CiderSpice else EscanerColor
+@Composable
+fun ColorScheme.cardsColor():Color= if (isSystemInDarkTheme()) Color.DarkGray else Color.White
 @Composable
 fun ColorScheme.dynamicGradient(): Brush {
     return if (isSystemInDarkTheme()) GradientDark else GradientLight
 }
+@Composable
+fun ColorScheme.placeholderColor():Color = if (isSystemInDarkTheme()) Color.LightGray else Color.Gray
+
+@Composable
+fun ColorScheme.usrMessages():Color = if (isSystemInDarkTheme()) Color(0xFF574F4F) else Color(0xFFFFF9F2)
+@Composable
+fun ColorScheme.virtualAssistenMessages():Color = if (isSystemInDarkTheme()) Color.Gray else Color.White
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Terracotta,
-    secondary = OrangeGradientEnd,
-    tertiary = BlueOfficial,
-    background = Color(0xFF121212),
-    surface = Color(0xFF121212),
+    primary = BarnRed,
+    secondary = PottersClay,
+    tertiary = BloodRed,
+    background = BackgroundDark,
+    surface = Color(0xFF737373),
     onBackground = Color.White
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Terracotta,
     secondary = OrangeGradientEnd,
-    tertiary = BlueOfficial,
-    background = Color(0xFFF0E9DA),
+    tertiary = AnalogousPink,
+    background = BackgroundLight,
     surface = Color(0xFFF0E9DA),
-    onBackground = Color.Black
+    onBackground = Color.Black,
 )
 
 @Composable
@@ -69,6 +72,7 @@ fun DomumtechTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
+            window.navigationBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }

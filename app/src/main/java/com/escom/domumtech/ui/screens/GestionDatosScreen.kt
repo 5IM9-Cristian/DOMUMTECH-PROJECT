@@ -23,9 +23,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun GestionDatosScreen() {
+fun GestionDatosScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
@@ -296,5 +298,6 @@ private fun borderStroke(width: androidx.compose.ui.unit.Dp, color: Color) =
 @Preview(showBackground = true, widthDp = 393, heightDp = 1800)
 @Composable
 fun GestionDatosScreenPreview() {
-    GestionDatosScreen()
+    val navController = rememberNavController()
+    GestionDatosScreen(navController = navController)
 }

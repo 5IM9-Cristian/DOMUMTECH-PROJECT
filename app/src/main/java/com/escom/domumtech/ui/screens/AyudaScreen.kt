@@ -26,9 +26,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun AyudaScreen() {
+fun AyudaScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
@@ -248,5 +250,6 @@ fun FaqItem(text: String) {
 @Preview(showBackground = true, widthDp = 393, heightDp = 1000)
 @Composable
 fun AyudaScreenPreview() {
-    AyudaScreen()
+    val navController = rememberNavController()
+    AyudaScreen(navController = navController)
 }

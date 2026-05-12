@@ -21,9 +21,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun PoliticaPrivacidadScreen() {
+fun PoliticaPrivacidadScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
@@ -287,5 +289,6 @@ fun SecurityChip(text: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true, widthDp = 393, heightDp = 1500)
 @Composable
 fun PoliticaPrivacidadScreenPreview() {
-    PoliticaPrivacidadScreen()
+    val navController = rememberNavController()
+    PoliticaPrivacidadScreen(navController = navController)
 }

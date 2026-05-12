@@ -55,3 +55,18 @@ fun NavGraph(navController: NavHostController) {
         composable(Screen.PoliticaPrivacidad.route) { PoliticaPrivacidadScreen(navController) }
     }
 }
+
+//Para regresar el color de la barra en caso que sea necesario
+
+/*
+navController.addOnDestinationChangedListener { _, destination, _ ->
+    val window = (context as Activity).window
+    when (destination.route) {
+        Screen.Registro.route -> {
+            window.statusBarColor = Color.Transparent.toArgb()
+        }
+        else -> {
+            window.statusBarColor = colorScheme.primary.toArgb()
+        }
+    }
+} */

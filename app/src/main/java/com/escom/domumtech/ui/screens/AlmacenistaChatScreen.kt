@@ -1,5 +1,5 @@
 package com.escom.domumtech.ui.screens
-
+import com.escom.domumtech.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,32 +20,37 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.escom.domumtech.ui.theme.SetupEdgeToEdge
+import com.escom.domumtech.ui.theme.cardsColor
+import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
+import com.escom.domumtech.ui.theme.usrMessages
+import com.escom.domumtech.ui.theme.virtualAssistenMessages
 
 data class Message(val text: String, val isUser: Boolean, val time: String)
 
 @Composable
 fun AlmacenistaChatScreen(navController: NavController) {
-    val mainGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
-    )
-    
+    val initialAssistantMessage = stringResource(R.string.assistant_message)//Con esto se traduce multiples veces
     var userMessage by remember { mutableStateOf("") }
     val messages = remember { mutableStateListOf(
-        Message("¡Hola! Soy tu Almacenista Virtual. Puedo ayudarte a gestionar tu inventario, sugerir recetas con lo que tienes disponible, o responder cualquier pregunta sobre tus productos. ¿En qué puedo asistirte?", false, "04:35 p.m.")
+        Message(initialAssistantMessage, false, "04:35 p.m.")
     ) }
     
     val listState = rememberLazyListState()
-
+    SetupEdgeToEdge()
     Scaffold(
         topBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(mainGradient)
+                    .background(MaterialTheme.colorScheme.dynamicGradient())
+                    .statusBarsPadding()
                     .padding(horizontal = 24.dp, vertical = 20.dp)
             ) {
                 Row(
@@ -57,7 +62,7 @@ fun AlmacenistaChatScreen(navController: NavController) {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Volver",
+                                contentDescription = stringResource(R.string.volver),
                                 tint = Color.White,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -65,11 +70,11 @@ fun AlmacenistaChatScreen(navController: NavController) {
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(
-                                text = "Almacenista Virtual",
+                                text = stringResource(R.string.almacenista_virtual_title),
                                 style = TextStyle(fontSize = 20.sp, color = Color.White)
                             )
                             Text(
-                                text = "Asistente inteligente",
+                                text = stringResource(R.string.almacenista_virtual_subtitle),
                                 style = TextStyle(fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
                             )
                         }
@@ -90,7 +95,7 @@ fun AlmacenistaChatScreen(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(mainGradient)
+                    .background(MaterialTheme.colorScheme.dynamicGradient())
                     .padding(24.dp)
             ) {
                 Row(
@@ -100,16 +105,16 @@ fun AlmacenistaChatScreen(navController: NavController) {
                     OutlinedTextField(
                         value = userMessage,
                         onValueChange = { userMessage = it },
-                        placeholder = { Text("Escribe tu mensaje...", color = Color.LightGray) },
+                        placeholder = { Text(stringResource(R.string.write_message), color = MaterialTheme.colorScheme.placeholderColor()) },
                         modifier = Modifier
                             .weight(1f)
                             .height(56.dp)
                             .shadow(4.dp, RoundedCornerShape(28.dp)),
                         shape = RoundedCornerShape(28.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                            focusedBorderColor = Color.Transparent,
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedBorderColor = MaterialTheme.colorScheme.tertiary,
                             unfocusedBorderColor = Color.Transparent
                         ),
                         singleLine = true
@@ -120,14 +125,14 @@ fun AlmacenistaChatScreen(navController: NavController) {
                             .clip(CircleShape)
                             .background(if (userMessage.isNotBlank()) Color.White else Color.White.copy(alpha = 0.4f))
                             .clickable(enabled = userMessage.isNotBlank()) { 
-                                messages.add(Message(userMessage, true, "Ahora"))
+                                messages.add(Message(userMessage, true, "Ahora")) //Pendiente de cambiar
                                 userMessage = ""
                             },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
-                            contentDescription = "Enviar",
+                            contentDescription = stringResource(R.string.enviar),
                             tint = if (userMessage.isNotBlank()) Color(0xFFDC7176) else Color.White,
                             modifier = Modifier.size(24.dp)
                         )
@@ -140,7 +145,7 @@ fun AlmacenistaChatScreen(navController: NavController) {
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
                 .padding(horizontal = 24.dp),
             contentPadding = PaddingValues(top = 24.dp, bottom = 24.dp)
@@ -163,7 +168,7 @@ fun AlmacenistaChatScreen(navController: NavController) {
 @Composable
 fun ChatBubble(message: Message) {
     val alignment = if (message.isUser) Alignment.CenterEnd else Alignment.CenterStart
-    val bubbleColor = if (message.isUser) Color(0xFFFFF9F2) else Color.White
+    val bubbleColor = if (message.isUser) MaterialTheme.colorScheme.usrMessages() else MaterialTheme.colorScheme.virtualAssistenMessages()
     val shape = if (message.isUser) 
         RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 6.dp)
     else 
@@ -180,13 +185,13 @@ fun ChatBubble(message: Message) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = message.text,
-                    style = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, color = Color(0xFF1A1A1A))
+                    style = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, color = MaterialTheme.colorScheme.onBackground)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = message.time,
                     modifier = Modifier.align(Alignment.End),
-                    style = TextStyle(fontSize = 12.sp, color = Color(0xFFDE8948).copy(alpha = 0.7f))
+                    style = TextStyle(fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f))
                 )
             }
         }
@@ -197,15 +202,15 @@ fun ChatBubble(message: Message) {
 fun SuggestionsSection(onSuggestionClick: (String) -> Unit) {
     Column {
         Text(
-            text = "Sugerencias:",
-            style = TextStyle(fontSize = 12.sp, color = Color(0xFFDE8948).copy(alpha = 0.8f))
+            text = stringResource(R.string.sugerencias),
+            style = TextStyle(fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f))
         )
         Spacer(modifier = Modifier.height(12.dp))
         
         val suggestions = listOf(
-            "¿Qué puedo cocinar hoy?",
-            "¿Qué necesito comprar?",
-            "Muestra mi inventario"
+            stringResource(R.string.sugerencia1),
+            stringResource(R.string.sugerencia2),
+            stringResource(R.string.sugerencia3)
         )
 
         suggestions.forEach { suggestion ->
@@ -213,13 +218,13 @@ fun SuggestionsSection(onSuggestionClick: (String) -> Unit) {
                 modifier = Modifier
                     .padding(vertical = 4.dp)
                     .shadow(elevation = 2.dp, shape = RoundedCornerShape(20.dp))
-                    .background(Color.White, RoundedCornerShape(20.dp))
+                    .background(MaterialTheme.colorScheme.virtualAssistenMessages(), RoundedCornerShape(20.dp))
                     .clickable { onSuggestionClick(suggestion) }
                     .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
                 Text(
                     text = suggestion,
-                    style = TextStyle(fontSize = 14.sp, color = Color(0xFF1A1A1A))
+                    style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.onBackground)
                 )
             }
         }

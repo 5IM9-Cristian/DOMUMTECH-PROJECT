@@ -1,5 +1,5 @@
 package com.escom.domumtech.ui.screens
-
+import com.escom.domumtech.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,32 +21,37 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.ui.theme.SetupEdgeToEdge
+import com.escom.domumtech.ui.theme.cardsColor
+import com.escom.domumtech.ui.theme.dynamicGradient
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ListaComprasScreen() {
+fun ListaComprasScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    val mainGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
-    )
-    var selectedCategory by remember { mutableStateOf("Todas") }
 
+    var selectedCategory by remember { mutableStateOf("Todas") }
+    SetupEdgeToEdge()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(scrollState)
     ) {
         // Header con Filtros
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(mainGradient, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                .background(MaterialTheme.colorScheme.dynamicGradient(), shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                .statusBarsPadding()
                 .padding(24.dp)
         ) {
             Column {
@@ -56,21 +61,21 @@ fun ListaComprasScreen() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
+                        Icon(//Tiene que ser boton
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver",
+                            contentDescription = stringResource(R.string.volver),
                             tint = Color.White,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            text = "Lista de Compras",
+                            text = stringResource(R.string.lista_compras_title),
                             style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
                         )
                     }
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Filtrar",
+                        contentDescription = stringResource(R.string.filtrar),
                         tint = Color.White,
                         modifier = Modifier.size(24.dp)
                     )
@@ -92,14 +97,14 @@ fun ListaComprasScreen() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Filtrar por categoría",
+                                text = stringResource(R.string.filtrar_categoria),
                                 style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.White)
                             )
                             Icon(Icons.Default.Close, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         
-                        val categories = listOf("Todas", "Bebidas", "Limpieza", "Condimentos", "Harinas", "Higiene", "Endulzantes")
+                        val categories = listOf("Todas", "Bebidas", "Limpieza", "Condimentos", "Harinas", "Higiene", "Endulzantes")//Pendientes de agregar a las strings, hay que discutir si estas las decidimos nosotros o el usuario
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -133,7 +138,7 @@ fun ListaComprasScreen() {
         Column(modifier = Modifier.padding(24.dp)) {
             // Sección "Se Terminó"
             ShoppingSection(
-                title = "Se Terminó",
+                title = stringResource(R.string.se_termino),
                 count = "3",
                 icon = Icons.Default.Info,
                 iconColor = Color(0xFFE7000B),
@@ -148,7 +153,7 @@ fun ListaComprasScreen() {
 
             // Sección "Por Terminarse"
             ShoppingSection(
-                title = "Por Terminarse",
+                title = stringResource(R.string.por_terminarse),
                 count = "4",
                 icon = Icons.Default.Warning,
                 iconColor = Color(0xFFF54900),
@@ -171,7 +176,7 @@ fun ShoppingSection(title: String, count: String, icon: ImageVector, iconColor: 
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = title,
-                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Box(
@@ -194,7 +199,7 @@ fun ShoppingSection(title: String, count: String, icon: ImageVector, iconColor: 
                     .shadow(elevation = 4.dp, shape = RoundedCornerShape(14.dp))
                     .border(1.5.dp, item.borderColor.copy(alpha = 0.5f), RoundedCornerShape(14.dp)),
                 shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.cardsColor())
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
@@ -203,8 +208,8 @@ fun ShoppingSection(title: String, count: String, icon: ImageVector, iconColor: 
                         verticalAlignment = Alignment.Top
                     ) {
                         Column {
-                            Text(text = item.name, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold))
-                            Text(text = item.category, style = TextStyle(fontSize = 14.sp, color = Color.LightGray))
+                            Text(text = item.name, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground))
+                            Text(text = item.category, style = TextStyle(fontSize = 14.sp, color = Color.Gray))
                         }
                         Box(
                             modifier = Modifier
@@ -261,5 +266,6 @@ fun StoreButton(modifier: Modifier = Modifier, label: String, color: Color) {
 @Preview(showBackground = true, widthDp = 393, heightDp = 1200)
 @Composable
 fun ListaComprasScreenPreview() {
-    ListaComprasScreen()
+    val navController = rememberNavController()
+    ListaComprasScreen(navController = navController)
 }
