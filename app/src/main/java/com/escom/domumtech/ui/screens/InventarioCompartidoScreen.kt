@@ -81,7 +81,7 @@ fun InventarioCompartidoScreen(navController: NavController) {
                             Icon(Icons.Default.AccountCircle, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = stringResource(R.string.miembros_activos),
+                                text = "Miembros",
                                 style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.White)
                             )
                         }
@@ -146,13 +146,6 @@ fun ActiveMemberAvatar(emoji: String, name: String, isActive: Boolean) {
         }
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = name, fontSize = 12.sp, color = Color.White)
-        if (isActive) {
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .background(Color(0xFF05DF72), CircleShape)
-            )
-        }
     }
 }
 
