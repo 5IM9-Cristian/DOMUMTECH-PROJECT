@@ -1,5 +1,6 @@
 package com.escom.domumtech.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -10,7 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -24,19 +25,46 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.navigation.Screen
+import com.escom.domumtech.ui.theme.dynamicGradient
 
 @Composable
 fun GestionDatosScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    val mainGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
-    )
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+
+    // Estado para el diálogo de Eliminar Cuenta
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    navController.navigate(Screen.Welcome.route) {
+                        popUpTo(Screen.Dashboard.route) { inclusive = true }
+                    }
+                }) {
+                    Text("Eliminar para siempre", color = Color(0xFFFB2C36))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancelar", color = Color.Gray)
+                }
+            },
+            title = { Text("¿Eliminar tu cuenta?") },
+            text = { Text("Esta acción es irreversible y borrará todo tu inventario y datos familiares. ¿Estás absolutamente seguro?") },
+            containerColor = Color.White,
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(scrollState)
     ) {
         // Header
@@ -44,6 +72,7 @@ fun GestionDatosScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(mainGradient)
+                .statusBarsPadding()
                 .padding(24.dp)
         ) {
             Row(
@@ -60,7 +89,6 @@ fun GestionDatosScreen(navController: NavController) {
                             modifier = Modifier.size(24.dp)
                         )
                     }
-                    Spacer(modifier = Modifier.width(16.dp))
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(
@@ -252,10 +280,10 @@ fun GestionDatosScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(24.dp))
 
                     OutlinedButton(
-                        onClick = { },
+                        onClick = { showDeleteDialog = true },
                         modifier = Modifier.fillMaxWidth().height(56.dp),
                         shape = RoundedCornerShape(14.dp),
-                        border = borderStroke(1.5.dp, Color(0xFFFB2C36)),
+                        border = BorderStroke(1.5.dp, Color(0xFFFB2C36)),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFE7000B))
                     ) {
                         Text("Quiero Eliminar mi Cuenta", fontWeight = FontWeight.Bold)
@@ -292,15 +320,4 @@ fun GestionDatosScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(40.dp))
         }
     }
-}
-
-@Composable
-private fun borderStroke(width: androidx.compose.ui.unit.Dp, color: Color) = 
-    androidx.compose.foundation.BorderStroke(width, color)
-
-@Preview(showBackground = true, widthDp = 393, heightDp = 1800)
-@Composable
-fun GestionDatosScreenPreview() {
-    val navController = rememberNavController()
-    GestionDatosScreen(navController = navController)
 }

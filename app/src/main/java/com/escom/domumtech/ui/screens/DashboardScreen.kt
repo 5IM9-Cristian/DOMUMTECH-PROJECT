@@ -11,7 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,12 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.escom.domumtech.R
 import com.escom.domumtech.navigation.Screen
-import com.escom.domumtech.ui.theme.DomumtechTheme
-import com.escom.domumtech.ui.theme.SetupEdgeToEdge
-import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
 import kotlinx.coroutines.launch
 
@@ -41,17 +37,51 @@ import kotlinx.coroutines.launch
 fun DashboardScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    
-    // SetupEdgeToEdge() // Deshabilitado para Preview
+    val scrollState = rememberScrollState()
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+
+    // Estado para el diálogo de Cerrar Sesión
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showLogoutDialog = false
+                    navController.navigate(Screen.Welcome.route) {
+                        popUpTo(Screen.Dashboard.route) { inclusive = true }
+                    }
+                }) {
+                    Text("Cerrar Sesión", color = Color(0xFFDC7176))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutDialog = false }) {
+                    Text("Cancelar", color = Color.Gray)
+                }
+            },
+            title = { Text("¿Cerrar Sesión?") },
+            text = { Text("¿Estás seguro de que deseas salir de tu cuenta?") },
+            containerColor = Color.White,
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
-                drawerContainerColor = MaterialTheme.colorScheme.background,
+                drawerContainerColor = Color.White,
                 drawerShape = RoundedCornerShape(0.dp),
                 modifier = Modifier.width(320.dp)
             ) {
-                DrawerContent(MaterialTheme.colorScheme.dynamicGradient(), navController, drawerState)
+                DrawerContent(
+                    gradient = mainGradient, 
+                    navController = navController, 
+                    drawerState = drawerState,
+                    onLogoutClick = { showLogoutDialog = true }
+                )
             }
         }
     ) {
@@ -59,17 +89,18 @@ fun DashboardScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
+                .verticalScroll(scrollState)
         ) {
             // Header con Gradiente y Stats
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        MaterialTheme.colorScheme.dynamicGradient(),
+                        mainGradient,
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                     )
                     .statusBarsPadding()
-                    .padding(horizontal = 24.dp, vertical = 32.dp)
+                    .padding(24.dp)
             ) {
                 Column {
                     Row(
@@ -77,7 +108,7 @@ fun DashboardScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Botón de Menú (Abre el Drawer)
+                        // Botón de Menú
                         Box(
                             modifier = Modifier
                                 .size(40.dp)
@@ -90,19 +121,12 @@ fun DashboardScreen(navController: NavController) {
 
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = stringResource(R.string.hello),
-                                style = TextStyle(
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = Color.White
-                                )
+                                text = "Hola, María",
+                                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Medium, color = Color.White)
                             )
                             Text(
-                                text = stringResource(R.string.question),
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                    color = Color.White.copy(alpha = 0.8f)
-                                )
+                                text = "¿Qué deseas hacer hoy?",
+                                style = TextStyle(fontSize = 16.sp, color = Color.White.copy(alpha = 0.8f))
                             )
                         }
 
@@ -114,7 +138,7 @@ fun DashboardScreen(navController: NavController) {
                                     .clickable { navController.navigate(Screen.Ayuda.route) },
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(Icons.Default.Info, contentDescription = stringResource(R.string.drawer_menu_help), tint = Color.White)
+                                Icon(Icons.Default.Info, contentDescription = "Ayuda", tint = Color.White)
                             }
                             Box(
                                 modifier = Modifier
@@ -123,7 +147,7 @@ fun DashboardScreen(navController: NavController) {
                                     .clickable { navController.navigate(Screen.MiCuenta.route) },
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(Icons.Default.Person, contentDescription = stringResource(R.string.drawer_menu_my_account), tint = Color.White)
+                                Icon(Icons.Default.Person, contentDescription = "Perfil", tint = Color.White)
                             }
                         }
                     }
@@ -135,9 +159,9 @@ fun DashboardScreen(navController: NavController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        StatCard(modifier = Modifier.weight(1f), label = stringResource(R.string.total_productos), value = "47")
-                        StatCard(modifier = Modifier.weight(1f), label = stringResource(R.string.por_comprar), value = "12")
-                        StatCard(modifier = Modifier.weight(1f), label = stringResource(R.string.miembros), value = "4")
+                        StatCard(modifier = Modifier.weight(1f), label = "Total productos", value = "47")
+                        StatCard(modifier = Modifier.weight(1f), label = "Por comprar", value = "12")
+                        StatCard(modifier = Modifier.weight(1f), label = "Miembros", value = "4")
                     }
                 }
             }
@@ -152,48 +176,44 @@ fun DashboardScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
+                    HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray.copy(alpha = 0.5f))
                     Text(
-                        text = stringResource(R.string.quick_access),
+                        text = "Acceso Rápido",
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
+                        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground)
                     )
-                    HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
+                    HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray.copy(alpha = 0.5f))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ActionItem(
-                    title = stringResource(R.string.alta_producto_title),
-                    subtitle = stringResource(R.string.alta_producto_subtitle),
+                    title = "Alta de Producto", 
+                    subtitle = "Escanear o ingresar manualmente", 
                     icon = Icons.Default.AddCircle,
                     onClick = { navController.navigate(Screen.AltaProducto.route) }
                 )
                 ActionItem(
-                    title = stringResource(R.string.baja_producto_title),
-                    subtitle = stringResource(R.string.baja_producto_subtitle),
+                    title = "Baja de Producto", 
+                    subtitle = "Retirar productos del inventario", 
                     icon = Icons.Default.Delete,
                     onClick = { navController.navigate(Screen.BajaProducto.route) }
                 )
                 ActionItem(
-                    title = stringResource(R.string.inventario_compartido_title),
-                    subtitle = stringResource(R.string.inventario_compartido_subtitle),
+                    title = "Inventario Compartido", 
+                    subtitle = "Ver productos de la familia", 
                     icon = Icons.Default.Face,
                     onClick = { navController.navigate(Screen.InventarioCompartido.route) }
                 )
                 ActionItem(
-                    title = stringResource(R.string.lista_compras_title),
-                    subtitle = stringResource(R.string.lista_compras_subtitle),
+                    title = "Lista de Compras", 
+                    subtitle = "Productos por adquirir", 
                     icon = Icons.Default.ShoppingCart,
                     onClick = { navController.navigate(Screen.ListaCompras.route) }
                 )
                 ActionItem(
-                    title = stringResource(R.string.almacenista_virtual_title),
-                    subtitle = stringResource(R.string.almacenista_virtual_subtitle),
+                    title = "Almacenista Virtual", 
+                    subtitle = "Asistente inteligente", 
                     icon = Icons.Default.Info,
                     onClick = { navController.navigate(Screen.AlmacenistaChat.route) }
                 )
@@ -203,7 +223,12 @@ fun DashboardScreen(navController: NavController) {
 }
 
 @Composable
-fun DrawerContent(gradient: Brush, navController: NavController, drawerState: DrawerState) {
+fun DrawerContent(
+    gradient: Brush, 
+    navController: NavController, 
+    drawerState: DrawerState,
+    onLogoutClick: () -> Unit
+) {
     val scope = rememberCoroutineScope()
     fun navigate(route: String) {
         scope.launch {
@@ -213,12 +238,10 @@ fun DrawerContent(gradient: Brush, navController: NavController, drawerState: Dr
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Drawer Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(gradient)
-                .statusBarsPadding()
                 .padding(24.dp)
         ) {
             Column {
@@ -228,17 +251,16 @@ fun DrawerContent(gradient: Brush, navController: NavController, drawerState: Dr
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(R.string.drawer_menu),
+                        text = "Menú",
                         style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
                     )
                     IconButton(onClick = { scope.launch { drawerState.close() } }) {
-                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.drawer_menu_close), tint = Color.White)
+                        Icon(Icons.Default.Close, contentDescription = "Close", tint = Color.White)
                     }
                 }
                 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // User Info Card
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -259,11 +281,11 @@ fun DrawerContent(gradient: Brush, navController: NavController, drawerState: Dr
                     }
                     Column {
                         Text(
-                            text = "María", //Pendiente de cambiar dependiendo de la sesion
+                            text = "María",
                             style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.White)
                         )
                         Text(
-                            text = stringResource(R.string.drawer_menu_profile),
+                            text = "Ver perfil",
                             style = TextStyle(fontSize = 14.sp, color = Color.White.copy(alpha = 0.7f))
                         )
                     }
@@ -271,7 +293,6 @@ fun DrawerContent(gradient: Brush, navController: NavController, drawerState: Dr
             }
         }
 
-        // Navigation Items
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -279,31 +300,34 @@ fun DrawerContent(gradient: Brush, navController: NavController, drawerState: Dr
                 .verticalScroll(rememberScrollState())
                 .padding(vertical = 8.dp)
         ) {
-            DrawerItem(icon = Icons.Default.Home, label = stringResource(R.string.drawer_menu_start), onClick = { navigate(Screen.Dashboard.route) })
+            DrawerItem(icon = Icons.Default.Home, label = "Inicio", onClick = { navigate(Screen.Dashboard.route) })
             HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp), color = Color.LightGray.copy(alpha = 0.5f))
             
-            DrawerItem(icon = Icons.Default.AddCircle, label = stringResource(R.string.alta_producto_title), onClick = { navigate(Screen.AltaProducto.route) })
-            DrawerItem(icon = Icons.Default.Delete, label = stringResource(R.string.baja_producto_title), onClick = { navigate(Screen.BajaProducto.route) })
-            DrawerItem(icon = Icons.Default.Face, label = stringResource(R.string.inventario_compartido_title), onClick = { navigate(Screen.InventarioCompartido.route) })
-            DrawerItem(icon = Icons.Default.ShoppingCart, label = stringResource(R.string.lista_compras_title), onClick = { navigate(Screen.ListaCompras.route) })
-            DrawerItem(icon = Icons.Default.Info, label = stringResource(R.string.almacenista_virtual_title), onClick = { navigate(Screen.AlmacenistaChat.route) })
+            DrawerItem(icon = Icons.Default.AddCircle, label = "Alta de Producto", onClick = { navigate(Screen.AltaProducto.route) })
+            DrawerItem(icon = Icons.Default.Delete, label = "Baja de Producto", onClick = { navigate(Screen.BajaProducto.route) })
+            DrawerItem(icon = Icons.Default.Face, label = "Inventario Compartido", onClick = { navigate(Screen.InventarioCompartido.route) })
+            DrawerItem(icon = Icons.Default.ShoppingCart, label = "Lista de Compras", onClick = { navigate(Screen.ListaCompras.route) })
+            DrawerItem(icon = Icons.Default.Info, label = "Almacenista Virtual", onClick = { navigate(Screen.AlmacenistaChat.route) })
             
             HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp), color = Color.LightGray.copy(alpha = 0.5f))
             
-            DrawerItem(icon = Icons.Default.Person, label = stringResource(R.string.drawer_menu_my_account), onClick = { navigate(Screen.MiCuenta.route) })
-            DrawerItem(icon = Icons.Default.Info, label = stringResource(R.string.drawer_menu_help), onClick = { navigate(Screen.Ayuda.route) })
+            DrawerItem(icon = Icons.Default.Person, label = "Mi Cuenta", onClick = { navigate(Screen.MiCuenta.route) })
+            DrawerItem(icon = Icons.Default.Info, label = "Ayuda", onClick = { navigate(Screen.Ayuda.route) })
             
             Spacer(modifier = Modifier.weight(1f))
             
             HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp), color = Color.LightGray.copy(alpha = 0.5f))
             
-            DrawerItem(icon = Icons.Default.Settings, label = stringResource(R.string.drawer_menu_settings), onClick = { navigate(Screen.Configuracion.route) })
+            DrawerItem(icon = Icons.Default.Settings, label = "Configuración", onClick = { navigate(Screen.Configuracion.route) })
             DrawerItem(
                 icon = Icons.AutoMirrored.Filled.ExitToApp,
-                label = stringResource(R.string.cerrar_sesion),
+                label = "Cerrar Sesión",
                 labelColor = Color(0xFFE7000B),
                 iconTint = Color(0xFFE7000B),
-                onClick = { navigate(Screen.Welcome.route) }
+                onClick = { 
+                    scope.launch { drawerState.close() }
+                    onLogoutClick() 
+                }
             )
         }
     }
@@ -313,7 +337,7 @@ fun DrawerContent(gradient: Brush, navController: NavController, drawerState: Dr
 fun DrawerItem(
     icon: ImageVector,
     label: String,
-    labelColor: Color = MaterialTheme.colorScheme.onBackground,
+    labelColor: Color = Color(0xFF1A1A1A),
     iconTint: Color = Color.Gray,
     onClick: () -> Unit = {}
 ) {
@@ -363,7 +387,7 @@ fun ActionItem(title: String, subtitle: String, icon: ImageVector, onClick: () -
             .shadow(elevation = 4.dp, shape = RoundedCornerShape(14.dp))
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.cardsColor())
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row(
             modifier = Modifier.padding(16.dp).fillMaxWidth(),
@@ -374,20 +398,12 @@ fun ActionItem(title: String, subtitle: String, icon: ImageVector, onClick: () -
                 modifier = Modifier.size(48.dp).background(Color(0xFFFFF9F2), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(24.dp))
+                Icon(imageVector = icon, contentDescription = null, tint = Color(0xFFF2A666), modifier = Modifier.size(24.dp))
             }
             Column {
-                Text(text = title, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground))
-                Text(text = subtitle, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.secondary))
+                Text(text = title, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A)))
+                Text(text = subtitle, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color(0xFFE89E5B)))
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DashboardScreenPreview(){
-    DomumtechTheme {
-        DashboardScreen(navController = rememberNavController())
     }
 }

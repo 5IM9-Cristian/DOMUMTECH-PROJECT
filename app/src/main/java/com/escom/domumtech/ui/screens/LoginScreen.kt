@@ -1,103 +1,211 @@
 package com.escom.domumtech.ui.screens
-import com.escom.domumtech.R
+
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.escom.domumtech.R
 import com.escom.domumtech.navigation.Screen
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
-import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.dynamicGradient
 
 @Composable
 fun LoginScreen(navController: NavController) {
+    val scrollState = rememberScrollState()
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val secondaryTextColor = Color(0xFFF2A666)
+    
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(24.dp),
+            .background(color = backgroundColor)
+            .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = stringResource(R.string.inicio_sesion),
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(stringResource(R.string.email)) },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(14.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                //Clic en el campo
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                //Cuando no se le ha dado clic al campo
-                unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
-                //Cuando no se selecciona
-                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                //Color de la etiqueta
-                focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                //color del cursor
-                cursorColor = MaterialTheme.colorScheme.tertiary
-            )
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(stringResource(R.string.password)) },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(14.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                //Clic en el campo
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                //Cuando no se le ha dado clic al campo
-                unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
-                //Cuando no se selecciona
-                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                //Color de la etiqueta
-                focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                //color del cursor
-                cursorColor = MaterialTheme.colorScheme.tertiary
-            )
-        )
-        
-        Spacer(modifier = Modifier.height(32.dp))
-        
-        Button(
-            onClick = { navController.navigate(Screen.Dashboard.route) },
-            modifier = Modifier.fillMaxWidth().height(56.dp).shadow(4.dp, RoundedCornerShape(14.dp)),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+        // Cabecera con Gradiente
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(110.dp)
+                .background(mainGradient)
+                .padding(horizontal = 24.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Text(stringResource(R.string.entrar), color = Color.White)
+            Text(
+                text = stringResource(R.string.inicio_sesion),
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
+            )
         }
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview(){
-    DomumtechTheme() {
-        LoginScreen(navController = rememberNavController())
+        Spacer(modifier = Modifier.height(48.dp))
+
+        // Contenido del Formulario
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "Bienvenido de nuevo",
+                style = TextStyle(
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1A1A1A),
+                )
+            )
+            Text(
+                text = "Ingresa tus credenciales para continuar",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = secondaryTextColor,
+                )
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Campo Correo
+            Text(
+                text = "Correo Electrónico",
+                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color(0xFF1A1A1A))
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                placeholder = { Text("tu@email.com", color = Color.LightGray) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                leadingIcon = {
+                    Icon(Icons.Default.Email, contentDescription = null, tint = secondaryTextColor.copy(alpha = 0.7f))
+                }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Campo Contraseña
+            Text(
+                text = "Contraseña",
+                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color(0xFF1A1A1A))
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                placeholder = { Text("••••••••", color = Color.LightGray) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                leadingIcon = {
+                    Icon(Icons.Default.Lock, contentDescription = null, tint = secondaryTextColor.copy(alpha = 0.7f))
+                }
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Botón Iniciar Sesión
+            Button(
+                onClick = { navController.navigate(Screen.Dashboard.route) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+                contentPadding = PaddingValues(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                shape = RoundedCornerShape(16.dp),
+                enabled = email.isNotBlank() && password.isNotBlank()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(if (email.isNotBlank() && password.isNotBlank()) mainGradient else Brush.linearGradient(listOf(Color.LightGray, Color.LightGray))),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Iniciar Sesión",
+                        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Divisor "O continúa con"
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray.copy(alpha = 0.5f))
+                Text(
+                    text = "O continúa con",
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    style = TextStyle(fontSize = 14.sp, color = secondaryTextColor)
+                )
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray.copy(alpha = 0.5f))
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Botón Google
+            OutlinedButton(
+                onClick = { /* Lógica de Google */ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.5f)),
+                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    // Simulación Icono Google
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .border(width = 2.dp, color = Color(0xFF4285F4), shape = RoundedCornerShape(4.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("G", style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Black, color = Color(0xFF4285F4)))
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "Continuar con Google",
+                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF3C4043))
+                    )
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(40.dp))
+        }
     }
 }
