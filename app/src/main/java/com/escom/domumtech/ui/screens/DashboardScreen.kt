@@ -42,7 +42,7 @@ fun DashboardScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     
-    SetupEdgeToEdge()
+    // SetupEdgeToEdge() // Deshabilitado para Preview
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {

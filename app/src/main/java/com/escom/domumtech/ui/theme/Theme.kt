@@ -68,9 +68,11 @@ fun DomumtechTheme(
     }
     
     val view = LocalView.current
-    if (!view.isInEditMode) {
+    val activity = view.context.findActivity()
+    
+    if (activity != null) {
         SideEffect {
-            val window = (view.context as Activity).window
+            val window = activity.window
             window.statusBarColor = colorScheme.primary.toArgb()
             window.navigationBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme

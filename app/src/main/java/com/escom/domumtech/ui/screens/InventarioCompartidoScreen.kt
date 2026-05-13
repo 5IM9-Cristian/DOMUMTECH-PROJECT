@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.escom.domumtech.ui.theme.DomumtechTheme
-import com.escom.domumtech.ui.theme.SetupEdgeToEdge
+import com.escom.domumtech.ui.theme.ApplyAppSystemUi
 import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
 import com.escom.domumtech.ui.theme.placeholderColor
@@ -35,7 +35,7 @@ import com.escom.domumtech.ui.theme.placeholderColor
 @Composable
 fun InventarioCompartidoScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    SetupEdgeToEdge()
+    // ApplyAppSystemUi() // Deshabilitado temporalmente para el Preview
     Column(
         modifier = Modifier
             .fillMaxSize()

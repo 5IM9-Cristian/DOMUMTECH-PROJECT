@@ -43,7 +43,7 @@ fun AlmacenistaChatScreen(navController: NavController) {
     ) }
     
     val listState = rememberLazyListState()
-    SetupEdgeToEdge()
+    // SetupEdgeToEdge() // Deshabilitado para Preview
     Scaffold(
         topBar = {
             Box(

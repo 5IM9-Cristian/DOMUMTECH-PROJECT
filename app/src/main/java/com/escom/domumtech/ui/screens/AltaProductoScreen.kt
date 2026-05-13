@@ -35,7 +35,7 @@ import com.escom.domumtech.ui.theme.placeholderColor
 
 @Composable
 fun AltaProductoScreen(navController: NavController) {
-    SetupEdgeToEdge()
+    // SetupEdgeToEdge() // Deshabilitado para Preview
 
     val scrollState = rememberScrollState()
     

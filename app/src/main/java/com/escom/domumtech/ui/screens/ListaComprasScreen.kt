@@ -39,7 +39,7 @@ fun ListaComprasScreen(navController: NavController) {
     val scrollState = rememberScrollState()
 
     var selectedCategory by remember { mutableStateOf("Todas") }
-    SetupEdgeToEdge()
+    // SetupEdgeToEdge() // Deshabilitado para Preview
     Column(
         modifier = Modifier
             .fillMaxSize()

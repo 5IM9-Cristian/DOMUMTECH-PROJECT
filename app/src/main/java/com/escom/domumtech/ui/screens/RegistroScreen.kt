@@ -49,7 +49,7 @@ fun RegistroScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    SetupEdgeToEdge()//Para mezclar la barra de estado con la cabecera de la pantalla
+    // SetupEdgeToEdge() // Deshabilitado para Preview
     Column(
         modifier = Modifier
             .fillMaxSize()
