@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">DOMUMTECH</string>
-    <string name="domumtech_name">DOMUMTECH</string>
-    <string name="loading_message">POWERED BY DOMUMTECH</string>
+    <string name="app_name" translatable="false">DOMUMTECH</string>
+    <string name="domumtech_name" translatable="false">DOMUMTECH</string>
+    <string name="loading_message" translatable="false">POWERED BY DOMUMTECH</string>
     <string name="welcome_domumtech">BIENVENIDO A DOMUMTECH</string>
     <string name="ingresar">Ingresar</string>
     <string name="registrarse">Registrarse</string>
@@ -12,7 +12,7 @@
     <string name="welcome_back">Bienvenido de nuevo</string>
     <string name="ingresa_datos">Ingresa tus credenciales</string>
     <string name="email_example">tu@email.com</string>
-    <string name="password_example">••••••••</string>
+    <string name="password_example" translatable="false">••••••••</string>
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
     <string name="continue_with">O continua con</string>
     <string name="google_icon">Icono de google</string>
@@ -34,7 +34,7 @@
     <string name="almacenista_virtual_title">Almacenista Virtual</string>
     <string name="almacenista_virtual_subtitle">Asistente Inteligente</string>
     <string name="drawer_menu">Menú</string>
-    <string name="drawer_menu_close">Close</string>
+    <string name="drawer_menu_close" translatable="false">Close</string>
     <string name="drawer_menu_profile">Ver perfil</string>
     <string name="drawer_menu_start">Inicio</string>
     <string name="drawer_menu_my_account">Mi cuenta</string>

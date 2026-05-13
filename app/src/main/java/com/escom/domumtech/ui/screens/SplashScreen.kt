@@ -1,5 +1,5 @@
 package com.escom.domumtech.ui.screens
-
+import com.escom.domumtech.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,14 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.escom.domumtech.R
 import com.escom.domumtech.navigation.Screen
 import com.escom.domumtech.ui.theme.DomumtechTheme
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
-    val image = painterResource(if (isSystemInDarkTheme()) com.escom.domumtech.R.drawable.domumtech_logo else com.escom.domumtech.R.drawable.domumtech_logo_naranja)
+    val image = painterResource(if (isSystemInDarkTheme()) R.drawable.domumtech_logo_naranja else R.drawable.domumtech_logo_naranja)//Necesitamos un nuevo logo de otro color
     LaunchedEffect(key1 = true) {
         delay(2000)
         navController.navigate(Screen.Welcome.route) {
