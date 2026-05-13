@@ -30,7 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.escom.domumtech.R
 import com.escom.domumtech.navigation.Screen
+import com.escom.domumtech.ui.components.shimmerEffect
 import com.escom.domumtech.ui.theme.dynamicGradient
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,8 +42,14 @@ fun DashboardScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
 
-    // Estado para el diálogo de Cerrar Sesión
+    // Estados para simular carga
+    var isLoading by remember { mutableStateOf(true) }
     var showLogoutDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(2000) // Simular 2 segundos de carga
+        isLoading = false
+    }
 
     if (showLogoutDialog) {
         AlertDialog(
@@ -159,9 +167,9 @@ fun DashboardScreen(navController: NavController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        StatCard(modifier = Modifier.weight(1f), label = "Total productos", value = "47")
-                        StatCard(modifier = Modifier.weight(1f), label = "Por comprar", value = "12")
-                        StatCard(modifier = Modifier.weight(1f), label = "Miembros", value = "4")
+                        StatCard(modifier = Modifier.weight(1f), label = "Total productos", value = "47", isLoading = isLoading)
+                        StatCard(modifier = Modifier.weight(1f), label = "Por comprar", value = "12", isLoading = isLoading)
+                        StatCard(modifier = Modifier.weight(1f), label = "Miembros", value = "4", isLoading = isLoading)
                     }
                 }
             }
@@ -187,36 +195,49 @@ fun DashboardScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                ActionItem(
-                    title = "Alta de Producto", 
-                    subtitle = "Escanear o ingresar manualmente", 
-                    icon = Icons.Default.AddCircle,
-                    onClick = { navController.navigate(Screen.AltaProducto.route) }
-                )
-                ActionItem(
-                    title = "Baja de Producto", 
-                    subtitle = "Retirar productos del inventario", 
-                    icon = Icons.Default.Delete,
-                    onClick = { navController.navigate(Screen.BajaProducto.route) }
-                )
-                ActionItem(
-                    title = "Inventario Compartido", 
-                    subtitle = "Ver productos de la familia", 
-                    icon = Icons.Default.Face,
-                    onClick = { navController.navigate(Screen.InventarioCompartido.route) }
-                )
-                ActionItem(
-                    title = "Lista de Compras", 
-                    subtitle = "Productos por adquirir", 
-                    icon = Icons.Default.ShoppingCart,
-                    onClick = { navController.navigate(Screen.ListaCompras.route) }
-                )
-                ActionItem(
-                    title = "Almacenista Virtual", 
-                    subtitle = "Asistente inteligente", 
-                    icon = Icons.Default.Info,
-                    onClick = { navController.navigate(Screen.AlmacenistaChat.route) }
-                )
+                if (isLoading) {
+                    repeat(5) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp)
+                                .padding(vertical = 8.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .shimmerEffect()
+                        )
+                    }
+                } else {
+                    ActionItem(
+                        title = "Alta de Producto", 
+                        subtitle = "Escanear o ingresar manualmente", 
+                        icon = Icons.Default.AddCircle,
+                        onClick = { navController.navigate(Screen.AltaProducto.route) }
+                    )
+                    ActionItem(
+                        title = "Baja de Producto", 
+                        subtitle = "Retirar productos del inventario", 
+                        icon = Icons.Default.Delete,
+                        onClick = { navController.navigate(Screen.BajaProducto.route) }
+                    )
+                    ActionItem(
+                        title = "Inventario Compartido", 
+                        subtitle = "Ver productos de la familia", 
+                        icon = Icons.Default.Face,
+                        onClick = { navController.navigate(Screen.InventarioCompartido.route) }
+                    )
+                    ActionItem(
+                        title = "Lista de Compras", 
+                        subtitle = "Productos por adquirir", 
+                        icon = Icons.Default.ShoppingCart,
+                        onClick = { navController.navigate(Screen.ListaCompras.route) }
+                    )
+                    ActionItem(
+                        title = "Almacenista Virtual", 
+                        subtitle = "Asistente inteligente", 
+                        icon = Icons.Default.Info,
+                        onClick = { navController.navigate(Screen.AlmacenistaChat.route) }
+                    )
+                }
             }
         }
     }
@@ -358,23 +379,26 @@ fun DrawerItem(
 }
 
 @Composable
-fun StatCard(modifier: Modifier = Modifier, label: String, value: String) {
+fun StatCard(modifier: Modifier = Modifier, label: String, value: String, isLoading: Boolean = false) {
     Column(
         modifier = modifier
             .height(100.dp)
             .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+            .then(if (isLoading) Modifier.shimmerEffect() else Modifier)
             .padding(12.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = label,
-            style = TextStyle(fontSize = 12.sp, color = Color.White.copy(alpha = 0.8f), textAlign = TextAlign.Center)
-        )
-        Text(
-            text = value,
-            style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Normal, color = Color.White, textAlign = TextAlign.Center)
-        )
+        if (!isLoading) {
+            Text(
+                text = label,
+                style = TextStyle(fontSize = 12.sp, color = Color.White.copy(alpha = 0.8f), textAlign = TextAlign.Center)
+            )
+            Text(
+                text = value,
+                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Normal, color = Color.White, textAlign = TextAlign.Center)
+            )
+        }
     }
 }
 
