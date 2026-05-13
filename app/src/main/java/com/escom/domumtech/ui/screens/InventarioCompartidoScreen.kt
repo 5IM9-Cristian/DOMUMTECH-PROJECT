@@ -52,12 +52,14 @@ fun InventarioCompartidoScreen(navController: NavController) {
         ) {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(//Hay que corregirse porque tiene que ser un boton
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.volver),
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.volver),
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = stringResource(R.string.inventario_compartido_title),

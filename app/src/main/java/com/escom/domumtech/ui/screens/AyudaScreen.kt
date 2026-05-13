@@ -51,12 +51,14 @@ fun AyudaScreen(navController: NavController) {
         ) {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Volver",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = "Centro de Ayuda",
