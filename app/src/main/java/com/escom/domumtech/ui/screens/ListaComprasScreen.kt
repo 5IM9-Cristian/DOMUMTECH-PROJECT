@@ -38,7 +38,6 @@ import com.escom.domumtech.ui.theme.dynamicGradient
 fun ListaComprasScreen(navController: NavController) {
     val scrollState = rememberScrollState()
 
-    var selectedCategory by remember { mutableStateOf("Todas") }
     // SetupEdgeToEdge() // Deshabilitado para Preview
     Column(
         modifier = Modifier
@@ -46,7 +45,7 @@ fun ListaComprasScreen(navController: NavController) {
             .background(MaterialTheme.colorScheme.background)
             .verticalScroll(scrollState)
     ) {
-        // Header con Filtros
+        // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -54,86 +53,23 @@ fun ListaComprasScreen(navController: NavController) {
                 .statusBarsPadding()
                 .padding(24.dp)
         ) {
-            Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.volver),
-                                tint = Color.White,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = stringResource(R.string.lista_compras_title),
-                            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
-                        )
-                    }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(R.string.filtrar),
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.volver),
                         tint = Color.White,
                         modifier = Modifier.size(24.dp)
                     )
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Categorías Chips
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(16.dp))
-                        .padding(16.dp)
-                ) {
-                    Column {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(R.string.filtrar_categoria),
-                                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.White)
-                            )
-                            Icon(Icons.Default.Close, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
-                        }
-                        Spacer(modifier = Modifier.height(12.dp))
-                        
-                        val categories = listOf("Todas", "Bebidas", "Limpieza", "Condimentos", "Harinas", "Higiene", "Endulzantes")//Pendientes de agregar a las strings, hay que discutir si estas las decidimos nosotros o el usuario
-                        FlowRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            categories.forEach { category ->
-                                val isSelected = selectedCategory == category
-                                Box(
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .background(if (isSelected) Color.White else Color.White.copy(alpha = 0.2f))
-                                        .clickable { selectedCategory = category }
-                                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                                ) {
-                                    Text(
-                                        text = category,
-                                        style = TextStyle(
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            color = if (isSelected) Color(0xFF1A1A1A) else Color.White
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = stringResource(R.string.lista_compras_title),
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
+                )
             }
         }
 
