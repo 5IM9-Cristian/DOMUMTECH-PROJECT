@@ -20,16 +20,23 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.cardsColor
+import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 
 @Composable
 fun CambioPasswordScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    val mainGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
-    )
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
 
     var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
@@ -42,7 +49,7 @@ fun CambioPasswordScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(backgroundColor)
             .verticalScroll(scrollState)
     ) {
         // Header
@@ -50,6 +57,7 @@ fun CambioPasswordScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(mainGradient)
+                .statusBarsPadding()
                 .padding(24.dp)
         ) {
             Row(
@@ -69,7 +77,7 @@ fun CambioPasswordScreen(navController: NavController) {
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(
-                            text = "Cambiar Contraseña",
+                            text = "Cambiar contraseña",
                             style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
                         )
                         Text(
@@ -92,13 +100,13 @@ fun CambioPasswordScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFFF9F2), RoundedCornerShape(14.dp))
-                    .border(1.5.dp, Color(0xFFCDD7D8).copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+                    .background(backgroundColor, RoundedCornerShape(14.dp))
+                    .border(1.5.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
                     .padding(20.dp)
             ) {
                 Text(
                     text = "Por tu seguridad, asegúrate de crear una contraseña fuerte que cumpla con todos los requisitos.",
-                    style = TextStyle(fontSize = 14.sp, lineHeight = 22.sp, color = Color(0xFF1A1A1A))
+                    style = TextStyle(fontSize = 14.sp, lineHeight = 22.sp, color = onBackgroundColor)
                 )
             }
 
@@ -106,7 +114,7 @@ fun CambioPasswordScreen(navController: NavController) {
 
             // Form Fields
             PasswordTextField(
-                label = "Contraseña Actual",
+                label = "Contraseña actual",
                 value = currentPassword,
                 onValueChange = { currentPassword = it },
                 placeholder = "Ingresa tu contraseña actual",
@@ -117,7 +125,7 @@ fun CambioPasswordScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             PasswordTextField(
-                label = "Nueva Contraseña",
+                label = "Nueva contraseña",
                 value = newPassword,
                 onValueChange = { newPassword = it },
                 placeholder = "Ingresa tu nueva contraseña",
@@ -128,7 +136,7 @@ fun CambioPasswordScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             PasswordTextField(
-                label = "Confirmar Nueva Contraseña",
+                label = "Confirmar nueva contraseña",
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
                 placeholder = "Confirma tu nueva contraseña",
@@ -153,12 +161,12 @@ fun CambioPasswordScreen(navController: NavController) {
                 Box(
                     modifier = Modifier.fillMaxSize().background(
                         if (currentPassword.isNotEmpty() && newPassword.isNotEmpty() && confirmPassword.isNotEmpty()) mainGradient 
-                        else Brush.linearGradient(listOf(Color.LightGray, Color.LightGray))
+                        else Brush.linearGradient(listOf(placeholderColor, placeholderColor))
                     ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Actualizar Contraseña",
+                        text = "Actualizar contraseña",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
@@ -180,34 +188,48 @@ fun PasswordTextField(
     isVisible: Boolean,
     onVisibilityChange: () -> Unit
 ) {
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+
     Column {
         Text(
             text = label,
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
         )
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(placeholder, color = Color(0xFFCDD7D8)) },
+            placeholder = { Text(placeholder, color = placeholderColor) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Color.LightGray.copy(alpha = 0.5f)) },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = placeholderColor) },
             trailingIcon = {
                 IconButton(onClick = onVisibilityChange) {
                     Icon(
                         imageVector = if (isVisible) Icons.Default.Info else Icons.Default.Lock,
                         contentDescription = null,
-                        tint = Color.LightGray.copy(alpha = 0.5f)
+                        tint = placeholderColor
                     )
                 }
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFFDC7176).copy(alpha = 0.5f),
-                unfocusedBorderColor = Color(0x4DCDD7D8)
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = placeholderColor.copy(alpha = 0.5f),
+                unfocusedContainerColor = cardColor,
+                focusedContainerColor = cardColor
             ),
             singleLine = true
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CambioPasswordScreenPreview() {
+    DomumtechTheme {
+        CambioPasswordScreen(navController = rememberNavController())
     }
 }

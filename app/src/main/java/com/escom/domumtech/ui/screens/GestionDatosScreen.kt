@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,8 +26,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.R
 import com.escom.domumtech.navigation.Screen
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,6 +41,11 @@ fun GestionDatosScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+    val secondaryColor = MaterialTheme.colorScheme.secondary
 
     // Estado para el diálogo de Eliminar Cuenta
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -52,17 +63,17 @@ fun GestionDatosScreen(navController: NavController) {
                             popUpTo(Screen.Dashboard.route) { inclusive = true }
                         }
                     }) {
-                        Text("Eliminar para siempre", color = Color(0xFFFB2C36))
+                        Text("Eliminar para siempre", color = MaterialTheme.colorScheme.primary)
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDeleteDialog = false }) {
-                        Text("Cancelar", color = Color.Gray)
+                        Text(stringResource(R.string.volver), color = placeholderColor)
                     }
                 },
                 title = { Text("¿Eliminar tu cuenta?") },
                 text = { Text("Esta acción es irreversible y borrará todo tu inventario y datos familiares. ¿Estás absolutamente seguro?") },
-                containerColor = Color.White,
+                containerColor = cardColor,
                 shape = RoundedCornerShape(16.dp)
             )
         }
@@ -70,7 +81,7 @@ fun GestionDatosScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(backgroundColor)
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
         ) {
@@ -79,6 +90,7 @@ fun GestionDatosScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(mainGradient)
+                    .statusBarsPadding()
                     .padding(24.dp)
             ) {
                 Row(
@@ -90,7 +102,7 @@ fun GestionDatosScreen(navController: NavController) {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Volver",
+                                contentDescription = stringResource(R.string.volver),
                                 tint = Color.White,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -98,7 +110,7 @@ fun GestionDatosScreen(navController: NavController) {
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(
-                                text = "Gestión de Datos",
+                                text = "Gestión de datos",
                                 style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
                             )
                             Text(
@@ -121,23 +133,23 @@ fun GestionDatosScreen(navController: NavController) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFFFF9F2), RoundedCornerShape(14.dp))
-                        .border(1.5.dp, Color(0xFFCDD7D8).copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+                        .background(cardColor, RoundedCornerShape(14.dp))
+                        .border(1.5.dp, secondaryColor.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
                         .padding(24.dp)
                 ) {
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.Lock, contentDescription = null, tint = Color(0xFFDC7176), modifier = Modifier.size(24.dp))
+                            Icon(Icons.Default.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = "Tus Derechos sobre tus Datos",
-                                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                                text = "Tus derechos sobre tus datos",
+                                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor)
                             )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text = "Tienes control total sobre tu información. Puedes exportar todos tus datos en cualquier momento o eliminar tu cuenta permanentemente.",
-                            style = TextStyle(fontSize = 14.sp, lineHeight = 22.sp, color = Color(0xCC1A1A1A))
+                            style = TextStyle(fontSize = 14.sp, lineHeight = 22.sp, color = onBackgroundColor.copy(alpha = 0.7f))
                         )
                     }
                 }
@@ -146,8 +158,8 @@ fun GestionDatosScreen(navController: NavController) {
 
                 // Sección Exportar Datos
                 Text(
-                    text = "Exportar Datos",
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                    text = "Exportar datos",
+                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Card(
@@ -155,28 +167,28 @@ fun GestionDatosScreen(navController: NavController) {
                         .fillMaxWidth()
                         .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
                     shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = cardColor)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
-                                    .background(Color(0xFFE89E5B).copy(alpha = 0.2f), RoundedCornerShape(12.dp)),
+                                    .background(secondaryColor.copy(alpha = 0.1f), RoundedCornerShape(12.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = Color(0xFFE89E5B))
+                                Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = secondaryColor)
                             }
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(
-                                text = "Descargar mi Información",
-                                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                                text = "Descargar mi información",
+                                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor)
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Recibirás un archivo con todos tus datos en formato JSON, incluyendo:",
-                            style = TextStyle(fontSize = 14.sp, lineHeight = 22.sp, color = Color(0xB21A1A1A))
+                            style = TextStyle(fontSize = 14.sp, lineHeight = 22.sp, color = placeholderColor)
                         )
                         
                         val items = listOf(
@@ -184,7 +196,7 @@ fun GestionDatosScreen(navController: NavController) {
                             "Inventario completo de productos",
                             "Historial de altas y bajas",
                             "Listas de compras guardadas",
-                            "Conversaciones con el Almacenista",
+                            "Conversaciones con el almacenista",
                             "Configuraciones y preferencias"
                         )
                         
@@ -192,7 +204,7 @@ fun GestionDatosScreen(navController: NavController) {
                             items.forEach { item ->
                                 Text(
                                     text = "• $item",
-                                    style = TextStyle(fontSize = 14.sp, lineHeight = 24.sp, color = Color(0xB21A1A1A))
+                                    style = TextStyle(fontSize = 14.sp, lineHeight = 24.sp, color = placeholderColor)
                                 )
                             }
                         }
@@ -220,14 +232,14 @@ fun GestionDatosScreen(navController: NavController) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = Color.White)
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Exportar Todos mis Datos", color = Color.White, fontWeight = FontWeight.Medium)
+                                    Text("Exportar todos mis datos", color = Color.White, fontWeight = FontWeight.Medium)
                                 }
                             }
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text = "El proceso puede tardar unos minutos. Te enviaremos un correo cuando esté listo.",
-                            style = TextStyle(fontSize = 12.sp, color = Color.LightGray, textAlign = TextAlign.Center),
+                            style = TextStyle(fontSize = 12.sp, color = placeholderColor, textAlign = TextAlign.Center),
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -237,15 +249,15 @@ fun GestionDatosScreen(navController: NavController) {
 
                 // Sección Eliminar Cuenta
                 Text(
-                    text = "Eliminar Cuenta",
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                    text = "Eliminar cuenta",
+                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFFEF2F2), RoundedCornerShape(14.dp))
-                        .border(1.5.dp, Color(0xFFFFC9C9), RoundedCornerShape(14.dp))
+                        .background(cardColor, RoundedCornerShape(14.dp))
+                        .border(1.5.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), RoundedCornerShape(14.dp))
                         .padding(24.dp)
                 ) {
                     Column {
@@ -253,21 +265,21 @@ fun GestionDatosScreen(navController: NavController) {
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
-                                    .background(Color(0xFFFB2C36), RoundedCornerShape(12.dp)),
+                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), RoundedCornerShape(12.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(Icons.Default.Warning, contentDescription = null, tint = Color.White)
+                                Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                             }
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(
-                                text = "Zona de Peligro",
-                                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFFC10007))
+                                text = "Zona de peligro",
+                                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "La eliminación de tu cuenta es permanente e irreversible. Esta acción:",
-                            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color(0xCCE7000B))
+                            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor.copy(alpha = 0.8f))
                         )
                         
                         val warningItems = listOf(
@@ -282,7 +294,7 @@ fun GestionDatosScreen(navController: NavController) {
                             warningItems.forEach { item ->
                                 Text(
                                     text = "• $item",
-                                    style = TextStyle(fontSize = 14.sp, lineHeight = 24.sp, color = Color(0xCCE7000B))
+                                    style = TextStyle(fontSize = 14.sp, lineHeight = 24.sp, color = placeholderColor)
                                 )
                             }
                         }
@@ -293,10 +305,10 @@ fun GestionDatosScreen(navController: NavController) {
                             onClick = { showDeleteDialog = true },
                             modifier = Modifier.fillMaxWidth().height(56.dp),
                             shape = RoundedCornerShape(14.dp),
-                            border = BorderStroke(1.5.dp, Color(0xFFFB2C36)),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFE7000B))
+                            border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
                         ) {
-                            Text("Quiero Eliminar mi Cuenta", fontWeight = FontWeight.Bold)
+                            Text("Quiero eliminar mi cuenta", fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -307,28 +319,36 @@ fun GestionDatosScreen(navController: NavController) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFCDD7D8).copy(alpha = 0.2f), RoundedCornerShape(14.dp))
+                        .background(cardColor, RoundedCornerShape(14.dp))
                         .padding(24.dp)
                 ) {
                     Column {
                         Text(
-                            text = "¿Necesitas Ayuda?",
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF1A1A1A))
+                            text = "¿Necesitas ayuda?",
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor)
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text = "Si tienes dudas sobre la gestión de tus datos o necesitas asistencia, nuestro equipo de soporte está disponible para ayudarte.",
-                            style = TextStyle(fontSize = 14.sp, lineHeight = 22.sp, color = Color(0xB21A1A1A))
+                            style = TextStyle(fontSize = 14.sp, lineHeight = 22.sp, color = placeholderColor)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = "Email: soporte@domumtech.com", fontSize = 14.sp, color = Color(0xFF1A1A1A))
-                        Text(text = "Teléfono: +52 55 1234 5678", fontSize = 14.sp, color = Color(0xFF1A1A1A))
-                        Text(text = "Horario: Lun-Vie 9:00 - 18:00", fontSize = 14.sp, color = Color(0xFF1A1A1A))
+                        Text(text = "Email: soporte@domumtech.com", fontSize = 14.sp, color = onBackgroundColor)
+                        Text(text = "Teléfono: +52 55 1234 5678", fontSize = 14.sp, color = onBackgroundColor)
+                        Text(text = "Horario: Lun-Vie 9:00 - 18:00", fontSize = 14.sp, color = onBackgroundColor)
                     }
                 }
                 
                 Spacer(modifier = Modifier.height(40.dp))
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GestionDatosScreenPreview() {
+    DomumtechTheme {
+        GestionDatosScreen(navController = rememberNavController())
     }
 }

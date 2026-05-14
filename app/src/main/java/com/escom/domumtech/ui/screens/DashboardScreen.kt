@@ -52,7 +52,7 @@ fun DashboardScreen(navController: NavController) {
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(2000) // Simular 2 segundos de carga
+        delay(600) // Carga rápida de 0.6 segundos
         isLoading = false
     }
 
@@ -104,7 +104,7 @@ fun DashboardScreen(navController: NavController) {
                 .background(backgroundColor)
                 .verticalScroll(scrollState)
         ) {
-            // Header con Gradiente y Stats
+            // Header
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
