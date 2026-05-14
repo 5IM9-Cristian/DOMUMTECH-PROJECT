@@ -87,7 +87,8 @@ fun DashboardScreen(navController: NavController) {
             ModalDrawerSheet(
                 drawerContainerColor = cardColor,
                 drawerShape = RoundedCornerShape(0.dp),
-                modifier = Modifier.width(320.dp)
+                modifier = Modifier.width(320.dp),
+                windowInsets = WindowInsets(0, 0, 0, 0)
             ) {
                 DrawerContent(
                     gradient = mainGradient, 

@@ -48,6 +48,7 @@ fun AltaProductoScreen(navController: NavController) {
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             Box(
                 modifier = Modifier

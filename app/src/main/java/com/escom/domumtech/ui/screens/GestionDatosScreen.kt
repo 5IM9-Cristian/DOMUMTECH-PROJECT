@@ -51,7 +51,8 @@ fun GestionDatosScreen(navController: NavController) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
         if (showDeleteDialog) {
             AlertDialog(

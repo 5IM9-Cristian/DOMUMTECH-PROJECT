@@ -46,6 +46,7 @@ fun AlmacenistaChatScreen(navController: NavController) {
     )
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             Box(
                 modifier = Modifier
