@@ -41,6 +41,7 @@ import com.escom.domumtech.R
 import com.escom.domumtech.navigation.Screen
 import com.escom.domumtech.ui.theme.DomumtechTheme
 import com.escom.domumtech.ui.theme.SetupEdgeToEdge
+import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
 import com.escom.domumtech.ui.theme.placeholderColor
 
@@ -50,10 +51,18 @@ fun RegistroScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     // SetupEdgeToEdge() // Deshabilitado para Preview
+    
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(color = backgroundColor),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // Cabecera con Gradiente
         Box(

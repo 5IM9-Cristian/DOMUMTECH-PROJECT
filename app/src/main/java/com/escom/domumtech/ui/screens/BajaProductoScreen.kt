@@ -25,8 +25,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.escom.domumtech.navigation.Screen
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,6 +39,11 @@ fun BajaProductoScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+    val secondaryColor = MaterialTheme.colorScheme.secondary
     
     val products = listOf(
         "Arroz Integral" to 2,
@@ -57,17 +66,17 @@ fun BajaProductoScreen(navController: NavController) {
                         snackbarHostState.showSnackbar("¡$selectedProduct retirado con éxito!")
                     }
                 }) {
-                    Text("Confirmar", color = Color(0xFFDC7176))
+                    Text("Confirmar", color = MaterialTheme.colorScheme.primary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showConfirmDialog = false }) {
-                    Text("Cancelar", color = Color.Gray)
+                    Text("Cancelar", color = placeholderColor)
                 }
             },
             title = { Text("Confirmar Baja") },
             text = { Text("¿Deseas retirar $quantityToRemove unidad(es) de $selectedProduct del inventario?") },
-            containerColor = Color.White,
+            containerColor = cardColor,
             shape = RoundedCornerShape(16.dp)
         )
     }
@@ -112,7 +121,7 @@ fun BajaProductoScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(backgroundColor)
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
         ) {
@@ -121,6 +130,7 @@ fun BajaProductoScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(mainGradient)
+                    .statusBarsPadding()
                     .padding(24.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -141,18 +151,17 @@ fun BajaProductoScreen(navController: NavController) {
             }
 
             Column(modifier = Modifier.padding(24.dp)) {
-                // Seleccionar Producto Card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
                     shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = cardColor)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Text(
                             text = "Seleccionar Producto",
-                            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -180,7 +189,7 @@ fun BajaProductoScreen(navController: NavController) {
                                     style = TextStyle(
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Medium,
-                                        color = if (isSelected) Color.White else Color(0xFF1A1A1A)
+                                        color = if (isSelected) Color.White else onBackgroundColor
                                     )
                                 )
                                 Box(
@@ -195,7 +204,7 @@ fun BajaProductoScreen(navController: NavController) {
                                         style = TextStyle(
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.Medium,
-                                            color = if (isSelected) Color.White else Color(0xFF1A1A1A)
+                                            color = if (isSelected) Color.White else onBackgroundColor
                                         )
                                     )
                                 }
@@ -207,18 +216,17 @@ fun BajaProductoScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Cantidad a dar de baja Card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
                     shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = cardColor)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Text(
                             text = "Cantidad a dar de baja",
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         
@@ -230,19 +238,19 @@ fun BajaProductoScreen(navController: NavController) {
                                 onClick = { if (quantityToRemove > 1) quantityToRemove-- },
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .background(Color(0xFFDC7176).copy(alpha = 0.7f), RoundedCornerShape(8.dp))
+                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.7f), RoundedCornerShape(8.dp))
                             ) {
                                 Box(modifier = Modifier.width(16.dp).height(2.dp).background(Color.White))
                             }
                             Text(
                                 text = quantityToRemove.toString(),
-                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium)
+                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                             )
                             IconButton(
                                 onClick = { quantityToRemove++ },
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .background(Color(0xFFE89E5B).copy(alpha = 0.8f), RoundedCornerShape(8.dp))
+                                    .background(secondaryColor.copy(alpha = 0.8f), RoundedCornerShape(8.dp))
                             ) {
                                 Icon(Icons.Default.Add, contentDescription = "Más", tint = Color.White)
                             }
@@ -254,19 +262,19 @@ fun BajaProductoScreen(navController: NavController) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color(0xFFFFF9F2), RoundedCornerShape(14.dp))
-                                .border(0.9.dp, Color(0x4DCDD7D8), RoundedCornerShape(14.dp))
+                                .background(backgroundColor, RoundedCornerShape(14.dp))
+                                .border(0.9.dp, placeholderColor.copy(alpha = 0.3f), RoundedCornerShape(14.dp))
                                 .padding(16.dp)
                         ) {
                             Column {
                                 Text(
                                     text = "Producto seleccionado: $selectedProduct",
-                                    style = TextStyle(fontSize = 14.sp, color = Color(0xFFE89E5B))
+                                    style = TextStyle(fontSize = 14.sp, color = secondaryColor)
                                 )
                                 val currentStock = products.find { it.first == selectedProduct }?.second ?: 0
                                 Text(
                                     text = "Disponible: $currentStock",
-                                    style = TextStyle(fontSize = 14.sp, color = Color(0xFFE89E5B))
+                                    style = TextStyle(fontSize = 14.sp, color = secondaryColor)
                                 )
                             }
                         }
@@ -274,5 +282,13 @@ fun BajaProductoScreen(navController: NavController) {
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 393, heightDp = 853)
+@Composable
+fun BajaProductoScreenPreview() {
+    DomumtechTheme {
+        BajaProductoScreen(navController = rememberNavController())
     }
 }

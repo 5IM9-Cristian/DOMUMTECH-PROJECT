@@ -1,45 +1,47 @@
 package com.escom.domumtech.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.cardsColor
+import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 
 @Composable
 fun AyudaScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    val mainGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
-    )
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(backgroundColor)
             .verticalScroll(scrollState)
     ) {
         // Header
@@ -47,211 +49,140 @@ fun AyudaScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(mainGradient)
+                .statusBarsPadding()
                 .padding(24.dp)
         ) {
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Volver",
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
                     Text(
                         text = "Centro de Ayuda",
                         style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
                     )
+                    Text(
+                        text = "¿Cómo podemos ayudarte hoy?",
+                        style = TextStyle(fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+                    )
                 }
-                Spacer(modifier = Modifier.height(24.dp))
-                // Search Bar
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text("Buscar en ayuda...", color = Color.LightGray) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .shadow(4.dp, RoundedCornerShape(14.dp)),
-                    shape = RoundedCornerShape(14.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent
-                    ),
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.LightGray) }
-                )
             }
         }
 
         Column(modifier = Modifier.padding(24.dp)) {
-            // Quick Access Section
-            HelpActionCard(
-                icon = Icons.Default.Info,
-                title = "Guía de Inicio",
-                subtitle = "12 artículos"
-            )
-            HelpActionCard(
-                icon = Icons.Default.PlayArrow,
-                title = "Video Tutoriales",
-                subtitle = "8 artículos"
-            )
-            HelpActionCard(
-                icon = Icons.Default.Email,
-                title = "Contactar Soporte",
-                subtitle = ""
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
             // FAQ Section
             Text(
                 text = "Preguntas Frecuentes",
-                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor),
+                modifier = Modifier.padding(bottom = 16.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+
+            FaqItem("¿Cómo agrego un nuevo miembro?", "Puedes hacerlo desde la pantalla de Miembros en el menú de configuración.")
+            FaqItem("¿El escáner OCR funciona con todos los productos?", "Funciona con la mayoría de las etiquetas claras, aunque estamos mejorando la IA cada día.")
+            FaqItem("¿Mis datos están seguros?", "Sí, toda tu información está encriptada y solo es visible para ti y tus miembros invitados.")
+            
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Contact Section
+            Text(
+                text = "Contáctanos",
+                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor),
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = cardColor)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    val faqs = listOf(
-                        "¿Cómo agrego productos al inventario?",
-                        "¿Cómo invito a miembros de mi familia?",
-                        "¿Qué es el Almacenista Virtual?",
-                        "¿Cómo funciona la Lista de Compras Inteligente?",
-                        "¿Puedo usar Domumtech sin internet?",
-                        "¿Cómo doy de baja un producto?"
-                    )
-                    faqs.forEachIndexed { index, faq ->
-                        FaqItem(text = faq)
-                        if (index < faqs.size - 1) {
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray.copy(alpha = 0.2f))
-                        }
-                    }
+                    ContactItem(Icons.Default.Email, "Soporte vía Email", "soporte@domumtech.com")
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = placeholderColor.copy(alpha = 0.2f))
+                    ContactItem(Icons.Default.Phone, "Llamada de Soporte", "+52 55 1234 5678")
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Support Banner
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFFE07970).copy(alpha = 0.1f), RoundedCornerShape(16.dp))
-                    .border(1.5.dp, Color(0xFFE07970).copy(alpha = 0.2f), RoundedCornerShape(16.dp))
-                    .padding(24.dp)
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "¿No encontraste lo que buscabas?",
-                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF1A1A1A))
-                    )
-                    Text(
-                        text = "Nuestro equipo de soporte está aquí para ayudarte",
-                        style = TextStyle(fontSize = 14.sp, color = Color.Gray, textAlign = TextAlign.Center),
-                        modifier = Modifier.padding(vertical = 12.dp)
-                    )
-                    Button(
-                        onClick = { },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(14.dp)),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                        contentPadding = PaddingValues(),
-                        shape = RoundedCornerShape(14.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize().background(mainGradient),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text("Contactar Soporte", color = Color.White, fontWeight = FontWeight.Medium)
-                        }
-                    }
-                }
-            }
-            
             Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
 
 @Composable
-fun HelpActionCard(icon: ImageVector, title: String, subtitle: String) {
+fun FaqItem(question: String, answer: String) {
+    var expanded by remember { mutableStateOf(false) }
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp)
-            .shadow(elevation = 2.dp, shape = RoundedCornerShape(14.dp)),
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+            .padding(vertical = 8.dp)
+            .clickable { expanded = !expanded }
+            .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp)),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = cardColor)
     ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Brush.horizontalGradient(listOf(Color(0xFFDC7176).copy(0.7f), Color(0xFFF2A666).copy(0.7f)))),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(imageVector = icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
-                    if (subtitle.isNotEmpty()) {
-                        Text(text = subtitle, fontSize = 12.sp, color = Color.Gray)
-                    }
-                }
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = question,
+                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor),
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = onBackgroundColor.copy(alpha = 0.5f)
+                )
             }
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                tint = Color.LightGray
-            )
+            if (expanded) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = answer,
+                    style = TextStyle(fontSize = 14.sp, color = placeholderColor, lineHeight = 20.sp)
+                )
+            }
         }
     }
 }
 
 @Composable
-fun FaqItem(text: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.weight(1f),
-            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Normal, color = Color(0xFF1A1A1A))
-        )
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = Color.LightGray,
-            modifier = Modifier.size(20.dp)
-        )
+fun ContactItem(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, value: String) {
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier.size(40.dp).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(text = title, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
+            Text(text = value, fontSize = 14.sp, color = placeholderColor)
+        }
     }
 }
 
-@Preview(showBackground = true, widthDp = 393, heightDp = 1000)
+@Preview(showBackground = true, widthDp = 393, heightDp = 853)
 @Composable
 fun AyudaScreenPreview() {
-    val navController = rememberNavController()
-    AyudaScreen(navController = navController)
+    DomumtechTheme {
+        AyudaScreen(navController = rememberNavController())
+    }
 }

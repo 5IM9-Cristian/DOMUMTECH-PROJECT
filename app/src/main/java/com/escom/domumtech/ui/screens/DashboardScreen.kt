@@ -31,7 +31,9 @@ import androidx.navigation.NavController
 import com.escom.domumtech.R
 import com.escom.domumtech.navigation.Screen
 import com.escom.domumtech.ui.components.shimmerEffect
+import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -41,6 +43,8 @@ fun DashboardScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
 
     // Estados para simular carga
     var isLoading by remember { mutableStateOf(true) }
@@ -61,17 +65,17 @@ fun DashboardScreen(navController: NavController) {
                         popUpTo(Screen.Dashboard.route) { inclusive = true }
                     }
                 }) {
-                    Text("Cerrar Sesión", color = Color(0xFFDC7176))
+                    Text("Cerrar Sesión", color = MaterialTheme.colorScheme.primary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showLogoutDialog = false }) {
-                    Text("Cancelar", color = Color.Gray)
+                    Text("Cancelar", color = MaterialTheme.colorScheme.placeholderColor())
                 }
             },
             title = { Text("¿Cerrar Sesión?") },
             text = { Text("¿Estás seguro de que deseas salir de tu cuenta?") },
-            containerColor = Color.White,
+            containerColor = cardColor,
             shape = RoundedCornerShape(16.dp)
         )
     }
@@ -80,7 +84,7 @@ fun DashboardScreen(navController: NavController) {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
-                drawerContainerColor = Color.White,
+                drawerContainerColor = cardColor,
                 drawerShape = RoundedCornerShape(0.dp),
                 modifier = Modifier.width(320.dp)
             ) {
@@ -419,15 +423,21 @@ fun ActionItem(title: String, subtitle: String, icon: ImageVector, onClick: () -
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Box(
-                modifier = Modifier.size(48.dp).background(Color(0xFFFFF9F2), RoundedCornerShape(12.dp)),
+                modifier = Modifier.size(48.dp).background(MaterialTheme.colorScheme.background, RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(imageVector = icon, contentDescription = null, tint = Color(0xFFF2A666), modifier = Modifier.size(24.dp))
+                Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(24.dp))
             }
             Column {
-                Text(text = title, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A)))
-                Text(text = subtitle, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color(0xFFE89E5B)))
+                Text(text = title, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground))
+                Text(text = subtitle, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.secondary))
             }
         }
     }
+}
+@Preview(showBackground = true, widthDp = 393, heightDp = 853)
+@Composable
+fun DashboardScreenPreview() {
+    val navController = androidx.navigation.compose.rememberNavController()
+    DashboardScreen(navController = navController)
 }

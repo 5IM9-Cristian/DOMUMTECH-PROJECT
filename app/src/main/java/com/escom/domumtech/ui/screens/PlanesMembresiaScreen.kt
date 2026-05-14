@@ -27,25 +27,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.cardsColor
+import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 
 @Composable
 fun PlanesMembresiaScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    val mainGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
-    )
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(backgroundColor)
             .verticalScroll(scrollState)
     ) {
-        // Header con Gradiente
+        // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(mainGradient, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                .statusBarsPadding()
                 .padding(24.dp)
         ) {
             Column {
@@ -100,7 +107,7 @@ fun PlanesMembresiaScreen(navController: NavController) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(mainGradient)
+                        .background(mainGradient, shape = RoundedCornerShape(20.dp))
                         .padding(24.dp)
                 ) {
                     Column {
@@ -143,7 +150,6 @@ fun PlanesMembresiaScreen(navController: NavController) {
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        // Features List
                         val features = listOf(
                             "Inventario ilimitado",
                             "Hasta 5 miembros familiares",
@@ -184,7 +190,6 @@ fun PlanesMembresiaScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Beneficios Section
             SectionHeader(title = "Beneficios del Plan")
             
             Card(
@@ -192,7 +197,7 @@ fun PlanesMembresiaScreen(navController: NavController) {
                     .fillMaxWidth()
                     .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
                 shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = cardColor)
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -233,8 +238,8 @@ fun PlanesMembresiaScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFFF9F2), RoundedCornerShape(16.dp))
-                    .border(1.5.dp, Color(0xFFE89E5B).copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp))
+                    .border(1.5.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                     .padding(24.dp)
             ) {
                 Column {
@@ -243,21 +248,21 @@ fun PlanesMembresiaScreen(navController: NavController) {
                             modifier = Modifier
                                 .size(32.dp)
                                 .clip(CircleShape)
-                                .background(Color(0xFFE89E5B).copy(alpha = 0.2f)),
+                                .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Info, contentDescription = null, tint = Color(0xFFE89E5B))
+                            Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.secondary)
                         }
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Acceso Beta Exclusivo",
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = "Estás usando Domumtech durante nuestro período beta. Disfruta de todas las funcionalidades premium sin costo mientras ayudas a mejorar la aplicación.",
-                        style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+                        style = TextStyle(fontSize = 14.sp, color = placeholderColor)
                     )
                 }
             }
@@ -277,19 +282,19 @@ fun BenefitItem(modifier: Modifier = Modifier, icon: ImageVector, title: String,
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(Color(0xFFDC7176).copy(alpha = 0.1f)),
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(imageVector = icon, contentDescription = null, tint = Color(0xFFDC7176), modifier = Modifier.size(24.dp))
+            Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = title,
-            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A), textAlign = TextAlign.Center)
+            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground, textAlign = TextAlign.Center)
         )
         Text(
             text = subtitle,
-            style = TextStyle(fontSize = 12.sp, color = Color.Gray, textAlign = TextAlign.Center)
+            style = TextStyle(fontSize = 12.sp, color = MaterialTheme.colorScheme.placeholderColor(), textAlign = TextAlign.Center)
         )
     }
 }
@@ -297,6 +302,7 @@ fun BenefitItem(modifier: Modifier = Modifier, icon: ImageVector, title: String,
 @Preview(showBackground = true, widthDp = 393, heightDp = 1250)
 @Composable
 fun PlanesMembresiaScreenPreview() {
-    val navController = rememberNavController()
-    PlanesMembresiaScreen(navController = navController)
+    DomumtechTheme {
+        PlanesMembresiaScreen(navController = rememberNavController())
+    }
 }

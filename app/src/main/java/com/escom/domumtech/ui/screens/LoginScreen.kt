@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,16 +26,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.escom.domumtech.R
 import com.escom.domumtech.navigation.Screen
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 
 @Composable
 fun LoginScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
     val backgroundColor = MaterialTheme.colorScheme.background
-    val secondaryTextColor = Color(0xFFF2A666)
+    val secondaryTextColor = MaterialTheme.colorScheme.secondary
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
     
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -53,6 +60,7 @@ fun LoginScreen(navController: NavController) {
                 .fillMaxWidth()
                 .height(110.dp)
                 .background(mainGradient)
+                .statusBarsPadding()
                 .padding(horizontal = 24.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -80,7 +88,7 @@ fun LoginScreen(navController: NavController) {
                 style = TextStyle(
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1A1A1A),
+                    color = onBackgroundColor,
                 )
             )
             Text(
@@ -96,15 +104,21 @@ fun LoginScreen(navController: NavController) {
             // Campo Correo
             Text(
                 text = "Correo Electrónico",
-                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color(0xFF1A1A1A))
+                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = onBackgroundColor)
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                placeholder = { Text("tu@email.com", color = Color.LightGray) },
+                placeholder = { Text("tu@email.com", color = MaterialTheme.colorScheme.placeholderColor()) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = cardColor,
+                    focusedContainerColor = cardColor,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.placeholderColor().copy(alpha = 0.5f)
+                ),
                 leadingIcon = {
                     Icon(Icons.Default.Email, contentDescription = null, tint = secondaryTextColor.copy(alpha = 0.7f))
                 }
@@ -115,18 +129,35 @@ fun LoginScreen(navController: NavController) {
             // Campo Contraseña
             Text(
                 text = "Contraseña",
-                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color(0xFF1A1A1A))
+                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = onBackgroundColor)
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                placeholder = { Text("••••••••", color = Color.LightGray) },
+                placeholder = { Text("••••••••", color = MaterialTheme.colorScheme.placeholderColor()) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = cardColor,
+                    focusedContainerColor = cardColor,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.placeholderColor().copy(alpha = 0.5f)
+                ),
                 leadingIcon = {
                     Icon(Icons.Default.Lock, contentDescription = null, tint = secondaryTextColor.copy(alpha = 0.7f))
                 }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "¿Olvidaste tu contraseña?",
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = onBackgroundColor,
+                )
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -163,13 +194,13 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray.copy(alpha = 0.5f))
+                HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.placeholderColor().copy(alpha = 0.5f))
                 Text(
                     text = "O continúa con",
                     modifier = Modifier.padding(horizontal = 12.dp),
                     style = TextStyle(fontSize = 14.sp, color = secondaryTextColor)
                 )
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray.copy(alpha = 0.5f))
+                HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.placeholderColor().copy(alpha = 0.5f))
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -181,8 +212,8 @@ fun LoginScreen(navController: NavController) {
                     .fillMaxWidth()
                     .height(60.dp),
                 shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.5f)),
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.placeholderColor().copy(alpha = 0.5f)),
+                colors = ButtonDefaults.outlinedButtonColors(containerColor = cardColor)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -191,21 +222,33 @@ fun LoginScreen(navController: NavController) {
                     // Simulación Icono Google
                     Box(
                         modifier = Modifier
-                            .size(24.dp)
-                            .border(width = 2.dp, color = Color(0xFF4285F4), shape = RoundedCornerShape(4.dp)),
+                            .size(24.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("G", style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Black, color = Color(0xFF4285F4)))
+                        Icon(
+                            painter = painterResource(R.drawable.google_icon),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(20.dp)
+                        )
                     }
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
                         text = "Continuar con Google",
-                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF3C4043))
+                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                     )
                 }
             }
             
             Spacer(modifier = Modifier.height(40.dp))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    DomumtechTheme {
+        LoginScreen(navController = rememberNavController())
     }
 }

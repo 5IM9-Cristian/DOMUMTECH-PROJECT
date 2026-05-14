@@ -1,5 +1,5 @@
 package com.escom.domumtech.ui.screens
-import com.escom.domumtech.R
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,7 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,27 +27,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.escom.domumtech.ui.theme.SetupEdgeToEdge
+import com.escom.domumtech.R
+import com.escom.domumtech.ui.theme.DomumtechTheme
 import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListaComprasScreen(navController: NavController) {
     val scrollState = rememberScrollState()
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
 
-    // SetupEdgeToEdge() // Deshabilitado para Preview
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(backgroundColor)
             .verticalScroll(scrollState)
     ) {
         // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.dynamicGradient(), shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                .background(mainGradient, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
                 .statusBarsPadding()
                 .padding(24.dp)
         ) {
@@ -74,136 +76,130 @@ fun ListaComprasScreen(navController: NavController) {
         }
 
         Column(modifier = Modifier.padding(24.dp)) {
-            // Sección "Se Terminó"
-            ShoppingSection(
-                title = stringResource(R.string.se_termino),
-                count = "3",
-                icon = Icons.Default.Info,
-                iconColor = Color(0xFFE7000B),
-                items = listOf(
-                    ShoppingItemData("Azúcar", "Endulzantes", "0", Color(0xFFFB2C36)),
-                    ShoppingItemData("Café Molido", "Bebidas", "0", Color(0xFFFB2C36)),
-                    ShoppingItemData("Papel Higiénico", "Limpieza", "0", Color(0xFFFB2C36))
+            // Out of Stock Section
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Agotados",
+                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                 )
-            )
+                Spacer(modifier = Modifier.width(8.dp))
+                Box(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), CircleShape)
+                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                ) {
+                    Text(text = "3", color = MaterialTheme.colorScheme.primary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ShoppingItemCard("Azúcar", "Endulzantes", 0)
+            ShoppingItemCard("Café Molido", "Bebidas", 0)
+            ShoppingItemCard("Papel Higiénico", "Limpieza", 0)
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Sección "Por Terminarse"
-            ShoppingSection(
-                title = stringResource(R.string.por_terminarse),
-                count = "4",
-                icon = Icons.Default.Warning,
-                iconColor = Color(0xFFF54900),
-                items = listOf(
-                    ShoppingItemData("Sal", "Condimentos", "1", Color(0xFFFF6900)),
-                    ShoppingItemData("Harina", "Harinas", "1", Color(0xFFFF6900))
+            // Low Stock Section
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Próximos a agotar",
+                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                 )
-            )
+                Spacer(modifier = Modifier.width(8.dp))
+                Box(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f), CircleShape)
+                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                ) {
+                    Text(text = "4", color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ShoppingItemCard("Sal", "Condimentos", 1)
+            ShoppingItemCard("Harina", "Harinas", 1)
+            
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
 
-data class ShoppingItemData(val name: String, val category: String, val stock: String, val borderColor: Color)
-
 @Composable
-fun ShoppingSection(title: String, count: String, icon: ImageVector, iconColor: Color, items: List<ShoppingItemData>) {
-    Column {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = icon, contentDescription = null, tint = iconColor, modifier = Modifier.size(20.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = title,
-                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(iconColor.copy(alpha = 0.1f))
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
+fun ShoppingItemCard(name: String, category: String, stock: Int) {
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(14.dp)),
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = cardColor)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = count, color = iconColor, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Column {
+                    Text(text = name, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor))
+                    Text(text = category, style = TextStyle(fontSize = 14.sp, color = placeholderColor))
+                }
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(
+                            if (stock == 0) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                            else MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stock.toString(),
+                        color = if (stock == 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        items.forEach { item ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(14.dp))
-                    .border(1.5.dp, item.borderColor.copy(alpha = 0.5f), RoundedCornerShape(14.dp)),
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.cardsColor())
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Column {
-                            Text(text = item.name, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground))
-                            Text(text = item.category, style = TextStyle(fontSize = 14.sp, color = Color.Gray))
-                        }
-                        Box(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(item.borderColor.copy(alpha = 0.1f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = item.stock, color = item.borderColor, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                        }
-                    }
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        StoreButton(
-                            modifier = Modifier.weight(1f),
-                            label = "Amazon",
-                            color = Color(0xFFFF9900)
-                        )
-                        StoreButton(
-                            modifier = Modifier.weight(1f),
-                            label = "Walmart",
-                            color = Color(0xFF0071DC)
-                        )
-                    }
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Button(
+                    onClick = { },
+                    modifier = Modifier.weight(1f).height(40.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF2A666))
+                ) {
+                    Text("Amazon", fontSize = 12.sp, color = Color.White)
+                }
+                Button(
+                    onClick = { },
+                    modifier = Modifier.weight(1f).height(40.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0071CE))
+                ) {
+                    Text("Walmart", fontSize = 12.sp, color = Color.White)
                 }
             }
         }
     }
 }
 
-@Composable
-fun StoreButton(modifier: Modifier = Modifier, label: String, color: Color) {
-    Button(
-        onClick = { },
-        modifier = modifier.height(44.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = color),
-        shape = RoundedCornerShape(12.dp),
-        contentPadding = PaddingValues(0.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = label, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-            Spacer(modifier = Modifier.width(6.dp))
-            Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Preview(showBackground = true, widthDp = 393, heightDp = 1200)
+@Preview(showBackground = true, widthDp = 393, heightDp = 853)
 @Composable
 fun ListaComprasScreenPreview() {
-    val navController = rememberNavController()
-    ListaComprasScreen(navController = navController)
+    DomumtechTheme {
+        ListaComprasScreen(navController = rememberNavController())
+    }
 }

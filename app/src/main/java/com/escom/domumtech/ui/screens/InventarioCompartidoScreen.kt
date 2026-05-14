@@ -1,4 +1,5 @@
 package com.escom.domumtech.ui.screens
+
 import com.escom.domumtech.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.escom.domumtech.ui.theme.DomumtechTheme
-import com.escom.domumtech.ui.theme.ApplyAppSystemUi
 import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
 import com.escom.domumtech.ui.theme.placeholderColor
@@ -35,18 +35,22 @@ import com.escom.domumtech.ui.theme.placeholderColor
 @Composable
 fun InventarioCompartidoScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    // ApplyAppSystemUi() // Deshabilitado temporalmente para el Preview
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(backgroundColor)
             .verticalScroll(scrollState)
     ) {
-        // Header con Miembros Activos
+        // Header con Miembros
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.dynamicGradient(), shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                .background(mainGradient, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
                 .statusBarsPadding()
                 .padding(24.dp)
         ) {
@@ -69,7 +73,7 @@ fun InventarioCompartidoScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Miembros Activos Card
+                // Miembros Card
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -102,11 +106,11 @@ fun InventarioCompartidoScreen(navController: NavController) {
 
         Column(modifier = Modifier.padding(24.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.List, contentDescription = null, tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.size(20.dp))
+                Icon(Icons.Default.List, contentDescription = null, tint = onBackgroundColor, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(R.string.productos_disponibles),
-                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground)
+                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                 )
             }
 
@@ -151,12 +155,15 @@ fun ActiveMemberAvatar(emoji: String, name: String, isActive: Boolean) {
 
 @Composable
 fun SharedProductCard(product: SharedProduct) {
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(elevation = 4.dp, shape = RoundedCornerShape(14.dp)),
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.cardsColor())
+        colors = CardDefaults.cardColors(containerColor = cardColor)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -164,7 +171,7 @@ fun SharedProductCard(product: SharedProduct) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                Text(text = product.name, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold))
+                Text(text = product.name, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground))
                 Box(
                     modifier = Modifier
                         .size(28.dp)
@@ -192,7 +199,7 @@ fun SharedProductCard(product: SharedProduct) {
                 }
                 Text(
                     text = "${stringResource(R.string.actualizado_por)} ${product.updatedBy}",
-                    style = TextStyle(fontSize = 12.sp, color = MaterialTheme.colorScheme.placeholderColor())
+                    style = TextStyle(fontSize = 12.sp, color = placeholderColor)
                 )
             }
         }
@@ -202,8 +209,7 @@ fun SharedProductCard(product: SharedProduct) {
 @Preview(showBackground = true, widthDp = 393, heightDp = 853)
 @Composable
 fun InventarioCompartidoScreenPreview() {
-    DomumtechTheme() {
-        val navController = rememberNavController()
-        InventarioCompartidoScreen(navController = navController)
+    DomumtechTheme {
+        InventarioCompartidoScreen(navController = rememberNavController())
     }
 }

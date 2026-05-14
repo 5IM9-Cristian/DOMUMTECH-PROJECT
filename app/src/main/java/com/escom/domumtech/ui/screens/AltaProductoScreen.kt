@@ -17,15 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.escom.domumtech.R
+import androidx.navigation.compose.rememberNavController
 import com.escom.domumtech.navigation.Screen
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 import kotlinx.coroutines.launch
 
 @Composable
@@ -34,6 +37,11 @@ fun AltaProductoScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+    val secondaryColor = MaterialTheme.colorScheme.secondary
     
     var productName by remember { mutableStateOf("") }
     var quantity by remember { mutableIntStateOf(1) }
@@ -66,7 +74,7 @@ fun AltaProductoScreen(navController: NavController) {
                 ) {
                     Box(
                         modifier = Modifier.fillMaxSize().background(
-                            if (productName.isNotBlank()) mainGradient else Brush.linearGradient(listOf(Color.LightGray, Color.LightGray))
+                            if (productName.isNotBlank()) mainGradient else Brush.linearGradient(listOf(placeholderColor, placeholderColor))
                         ),
                         contentAlignment = Alignment.Center
                     ) {
@@ -84,7 +92,7 @@ fun AltaProductoScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(backgroundColor)
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
         ) {
@@ -92,6 +100,7 @@ fun AltaProductoScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(mainGradient)
+                    .statusBarsPadding()
                     .padding(24.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -117,20 +126,20 @@ fun AltaProductoScreen(navController: NavController) {
                         .fillMaxWidth()
                         .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
                     shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = cardColor)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Text(
                             text = "Escáner OCR",
-                            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(160.dp)
-                                .background(Color(0xFFFFF9F2), RoundedCornerShape(14.dp))
-                                .border(1.5.dp, Color(0xFFE89E5B).copy(alpha = 0.4f), RoundedCornerShape(14.dp))
+                                .background(backgroundColor, RoundedCornerShape(14.dp))
+                                .border(1.5.dp, secondaryColor.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
                                 .clickable { productName = "Leche Entera" },
                             contentAlignment = Alignment.Center
                         ) {
@@ -139,12 +148,12 @@ fun AltaProductoScreen(navController: NavController) {
                                     imageVector = Icons.Default.Search,
                                     contentDescription = null,
                                     modifier = Modifier.size(48.dp),
-                                    tint = Color(0xFF1A1A1A)
+                                    tint = onBackgroundColor
                                 )
                                 Spacer(modifier = Modifier.height(12.dp))
                                 Text(
                                     text = "Toca para escanear",
-                                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFFE89E5B))
+                                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = secondaryColor)
                                 )
                             }
                         }
@@ -158,23 +167,23 @@ fun AltaProductoScreen(navController: NavController) {
                         .fillMaxWidth()
                         .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
                     shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = cardColor)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Text(
                             text = "Nombre del Producto",
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
                             value = productName,
                             onValueChange = { productName = it },
-                            placeholder = { Text("Ej: Arroz Integral", color = Color.LightGray) },
+                            placeholder = { Text("Ej: Arroz Integral", color = placeholderColor) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(14.dp),
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color(0xFFE89E5B).copy(alpha = 0.5f),
-                                unfocusedBorderColor = Color.LightGray.copy(alpha = 0.5f)
+                                focusedBorderColor = secondaryColor.copy(alpha = 0.5f),
+                                unfocusedBorderColor = placeholderColor.copy(alpha = 0.5f)
                             ),
                             singleLine = true
                         )
@@ -183,7 +192,7 @@ fun AltaProductoScreen(navController: NavController) {
 
                         Text(
                             text = "Cantidad",
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(
@@ -194,19 +203,19 @@ fun AltaProductoScreen(navController: NavController) {
                                 onClick = { if (quantity > 1) quantity-- },
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .background(Color(0xFFDC7176).copy(alpha = 0.7f), RoundedCornerShape(8.dp))
+                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.7f), RoundedCornerShape(8.dp))
                             ) {
                                 Box(modifier = Modifier.width(16.dp).height(2.dp).background(Color.White))
                             }
                             Text(
                                 text = quantity.toString(),
-                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium)
+                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                             )
                             IconButton(
                                 onClick = { quantity++ },
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .background(Color(0xFFE89E5B).copy(alpha = 0.8f), RoundedCornerShape(8.dp))
+                                    .background(secondaryColor.copy(alpha = 0.8f), RoundedCornerShape(8.dp))
                             ) {
                                 Icon(Icons.Default.Add, contentDescription = "Más", tint = Color.White)
                             }
@@ -215,5 +224,13 @@ fun AltaProductoScreen(navController: NavController) {
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 393, heightDp = 853)
+@Composable
+fun AltaProductoScreenPreview() {
+    DomumtechTheme {
+        AltaProductoScreen(navController = rememberNavController())
     }
 }

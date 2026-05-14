@@ -21,16 +21,24 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.cardsColor
+import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 
 @Composable
 fun MiembrosPlanScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    val mainGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
-    )
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
     
     var emailInvitation by remember { mutableStateOf("") }
     var isInviting by remember { mutableStateOf(false) }
@@ -38,7 +46,7 @@ fun MiembrosPlanScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(backgroundColor)
             .verticalScroll(scrollState)
     ) {
         // Header
@@ -46,6 +54,7 @@ fun MiembrosPlanScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(mainGradient)
+                .statusBarsPadding()
                 .padding(24.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -76,8 +85,8 @@ fun MiembrosPlanScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFFF9F2), RoundedCornerShape(16.dp))
-                    .border(1.5.dp, Color(0xFFE89E5B).copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+                    .background(backgroundColor, RoundedCornerShape(16.dp))
+                    .border(1.5.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
                     .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -85,7 +94,7 @@ fun MiembrosPlanScreen(navController: NavController) {
                         modifier = Modifier
                             .size(48.dp)
                             .clip(CircleShape)
-                            .background(Color(0xFFE89E5B).copy(alpha = 0.8f)),
+                            .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(text = "4", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
@@ -94,11 +103,11 @@ fun MiembrosPlanScreen(navController: NavController) {
                     Column {
                         Text(
                             text = "Miembros activos",
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                         )
                         Text(
                             text = "Límite: 5 miembros en plan familiar",
-                            style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+                            style = TextStyle(fontSize = 14.sp, color = placeholderColor)
                         )
                     }
                 }
@@ -134,37 +143,41 @@ fun MiembrosPlanScreen(navController: NavController) {
                         .fillMaxWidth()
                         .shadow(elevation = 6.dp, shape = RoundedCornerShape(16.dp)),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = cardColor)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Text(
                             text = "Enviar Invitación",
-                            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Correo electrónico",
-                            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.Gray)
+                            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = placeholderColor)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
                             value = emailInvitation,
                             onValueChange = { emailInvitation = it },
-                            placeholder = { Text("invitado@email.com", color = Color.LightGray) },
+                            placeholder = { Text("invitado@email.com", color = placeholderColor) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(14.dp),
-                            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Color.LightGray) },
+                            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = placeholderColor) },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = placeholderColor.copy(alpha = 0.5f)
+                            ),
                             singleLine = true
                         )
                         Spacer(modifier = Modifier.height(24.dp))
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                             TextButton(onClick = { isInviting = false; emailInvitation = "" }) {
-                                Text("Cancelar", color = Color(0xFF1A1A1A))
+                                Text("Cancelar", color = onBackgroundColor)
                             }
                             Spacer(modifier = Modifier.width(16.dp))
                             Button(
                                 onClick = { isInviting = false; emailInvitation = "" },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDC7176).copy(alpha = 0.8f)),
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)),
                                 shape = RoundedCornerShape(14.dp),
                                 enabled = emailInvitation.isNotBlank()
                             ) {
@@ -183,21 +196,21 @@ fun MiembrosPlanScreen(navController: NavController) {
                     .fillMaxWidth()
                     .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
                 shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = cardColor)
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
                     Text(
                         text = "Miembros Actuales",
-                        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
+                        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     MemberListItem(name = "María González", email = "maria@email.com", role = "Propietario", emoji = "👩", showDelete = false)
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray.copy(alpha = 0.3f))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = placeholderColor.copy(alpha = 0.3f))
                     MemberListItem(name = "Juan Pérez", email = "juan@email.com", role = "Admin", emoji = "👨")
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray.copy(alpha = 0.3f))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = placeholderColor.copy(alpha = 0.3f))
                     MemberListItem(name = "Ana García", email = "ana@email.com", role = "Miembro", emoji = "👧")
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray.copy(alpha = 0.3f))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = placeholderColor.copy(alpha = 0.3f))
                     MemberListItem(name = "Pedro López", email = "pedro@email.com", role = "Miembro", emoji = "👦")
                 }
             }
@@ -209,6 +222,9 @@ fun MiembrosPlanScreen(navController: NavController) {
 
 @Composable
 fun MemberListItem(name: String, email: String, role: String, emoji: String, showDelete: Boolean = true) {
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -219,21 +235,21 @@ fun MemberListItem(name: String, email: String, role: String, emoji: String, sho
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .border(1.dp, Color.LightGray.copy(alpha = 0.5f), CircleShape),
+                    .border(1.dp, placeholderColor.copy(alpha = 0.5f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = emoji, fontSize = 24.sp)
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column {
-                Text(text = name, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
-                Text(text = email, fontSize = 12.sp, color = Color.Gray)
+                Text(text = name, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
+                Text(text = email, fontSize = 12.sp, color = placeholderColor)
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
-                    .background(Color(0xFFDC7176).copy(alpha = 0.8f), RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
                     .padding(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 Text(text = role, color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Medium)
@@ -243,10 +259,18 @@ fun MemberListItem(name: String, email: String, role: String, emoji: String, sho
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Eliminar",
-                    tint = Color(0xFFDC7176),
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(20.dp).clickable { }
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 393, heightDp = 1050)
+@Composable
+fun MiembrosPlanScreenPreview() {
+    DomumtechTheme {
+        MiembrosPlanScreen(navController = rememberNavController())
     }
 }

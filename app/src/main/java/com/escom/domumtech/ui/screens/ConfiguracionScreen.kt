@@ -25,21 +25,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.navigation.Screen
+import com.escom.domumtech.ui.theme.DomumtechTheme
+import com.escom.domumtech.ui.theme.cardsColor
+import com.escom.domumtech.ui.theme.dynamicGradient
+import com.escom.domumtech.ui.theme.placeholderColor
 
 @Composable
 fun ConfiguracionScreen(navController: NavController) {
     val scrollState = rememberScrollState()
-    val mainGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDC7176), Color(0xFFF2A666))
-    )
-    
+    val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+
     var notificationsEnabled by remember { mutableStateOf(true) }
     var darkModeEnabled by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(backgroundColor)
             .verticalScroll(scrollState)
     ) {
         // Header
@@ -47,124 +52,80 @@ fun ConfiguracionScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(mainGradient)
+                .statusBarsPadding()
                 .padding(24.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Volver",
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp)
-                )
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Volver",
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = "Configuración",
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
-                )
+                Column {
+                    Text(
+                        text = "Configuración",
+                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
+                    )
+                    Text(
+                        text = "Personaliza tu experiencia",
+                        style = TextStyle(fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+                    )
+                }
             }
         }
 
         Column(modifier = Modifier.padding(24.dp)) {
-            // Sección Preferencias
-            SectionHeader(title = "Preferencias")
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    SettingsSwitchRow(
-                        icon = Icons.Default.Notifications,
-                        title = "Notificaciones",
-                        subtitle = "Alertas de productos",
-                        checked = notificationsEnabled,
-                        onCheckedChange = { notificationsEnabled = it }
-                    )
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray.copy(alpha = 0.2f))
-                    SettingsSwitchRow(
-                        icon = Icons.Default.Build,
-                        title = "Modo Oscuro",
-                        subtitle = "Apariencia de la app",
-                        checked = darkModeEnabled,
-                        onCheckedChange = { darkModeEnabled = it }
-                    )
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray.copy(alpha = 0.2f))
-                    SettingsClickableRow(
-                        icon = Icons.Default.Settings,
-                        title = "Idioma",
-                        subtitle = "Español"
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Sección Privacidad y Seguridad
-            SectionHeader(title = "Privacidad y Seguridad")
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    SettingsClickableRow(
-                        icon = Icons.Default.Lock,
-                        title = "Cambiar Contraseña"
-                    )
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray.copy(alpha = 0.2f))
-                    SettingsClickableRow(
-                        icon = Icons.Default.Info,
-                        title = "Gestión de Datos"
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Sección Acerca de
-            SectionHeader(title = "Acerca de")
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    SettingsInfoRow(
-                        icon = Icons.Default.Info,
-                        title = "Versión",
-                        value = "1.0.0 Beta"
-                    )
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray.copy(alpha = 0.2f))
-                    SettingsClickableRow(
-                        title = "Términos y Condiciones"
-                    )
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color.LightGray.copy(alpha = 0.2f))
-                    SettingsClickableRow(
-                        title = "Política de Privacidad"
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(48.dp))
-
-            // Footer
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Powered by Unfly",
-                    style = TextStyle(fontSize = 14.sp, color = Color.LightGray)
+            ConfigSection(title = "General") {
+                ConfigSwitchItem(
+                    icon = Icons.Default.Notifications,
+                    title = "Notificaciones",
+                    subtitle = "Alertas de productos agotados",
+                    checked = notificationsEnabled,
+                    onCheckedChange = { notificationsEnabled = it }
                 )
-                Text(
-                    text = "© 2026 Domumtech",
-                    style = TextStyle(fontSize = 12.sp, color = Color.LightGray)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = placeholderColor.copy(alpha = 0.2f))
+                ConfigSwitchItem(
+                    icon = Icons.Default.Settings,
+                    title = "Modo Oscuro",
+                    subtitle = "Cambiar apariencia visual",
+                    checked = darkModeEnabled,
+                    onCheckedChange = { darkModeEnabled = it }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            ConfigSection(title = "Cuenta y Seguridad") {
+                ConfigNavigationItem(
+                    icon = Icons.Default.Lock,
+                    title = "Cambiar Contraseña",
+                    onClick = { navController.navigate(Screen.CambioPassword.route) }
+                )
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = placeholderColor.copy(alpha = 0.2f))
+                ConfigNavigationItem(
+                    icon = Icons.Default.Person,
+                    title = "Gestión de Datos",
+                    onClick = { navController.navigate(Screen.GestionDatos.route) }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            ConfigSection(title = "Información") {
+                ConfigNavigationItem(
+                    icon = Icons.Default.Info,
+                    title = "Términos y Condiciones",
+                    onClick = { navController.navigate(Screen.TerminosCondiciones.route) }
+                )
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = placeholderColor.copy(alpha = 0.2f))
+                ConfigNavigationItem(
+                    icon = Icons.Default.Info,
+                    title = "Política de Privacidad",
+                    onClick = { navController.navigate(Screen.PoliticaPrivacidad.route) }
                 )
             }
             
@@ -174,24 +135,46 @@ fun ConfiguracionScreen(navController: NavController) {
 }
 
 @Composable
-fun SettingsSwitchRow(
-    icon: ImageVector,
-    title: String,
-    subtitle: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
+fun ConfigSection(title: String, content: @Composable ColumnScope.() -> Unit) {
+    val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+
+    Column {
+        Text(
+            text = title,
+            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor),
+            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
+        )
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = cardColor)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                content()
+            }
+        }
+    }
+}
+
+@Composable
+fun ConfigSwitchItem(icon: ImageVector, title: String, subtitle: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+    val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-            Icon(imageVector = icon, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(24.dp))
+            Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color(0xFF1A1A1A))
-                Text(text = subtitle, fontSize = 14.sp, color = Color(0xFFE89E5B).copy(alpha = 0.8f))
+                Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
+                Text(text = subtitle, fontSize = 12.sp, color = placeholderColor)
             }
         }
         Switch(
@@ -199,72 +182,37 @@ fun SettingsSwitchRow(
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
-                checkedTrackColor = Color(0xFFDC7176),
-                uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = Color.LightGray.copy(alpha = 0.5f),
-                uncheckedBorderColor = Color.Transparent
+                checkedTrackColor = MaterialTheme.colorScheme.primary
             )
         )
     }
 }
 
 @Composable
-fun SettingsClickableRow(
-    icon: ImageVector? = null,
-    title: String,
-    subtitle: String? = null
-) {
+fun ConfigNavigationItem(icon: ImageVector, title: String, onClick: () -> Unit) {
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-            if (icon != null) {
-                Icon(imageVector = icon, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(24.dp))
-                Spacer(modifier = Modifier.width(16.dp))
-            }
-            Column {
-                Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1A1A1A))
-                if (subtitle != null) {
-                    Text(text = subtitle, fontSize = 14.sp, color = Color(0xFFE89E5B).copy(alpha = 0.8f))
-                }
-            }
-        }
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = Color.LightGray.copy(alpha = 0.5f),
-            modifier = Modifier.size(20.dp)
-        )
-    }
-}
-
-@Composable
-fun SettingsInfoRow(
-    icon: ImageVector,
-    title: String,
-    value: String
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = icon, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(24.dp))
+            Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(16.dp))
-            Text(text = title, fontSize = 16.sp, color = Color(0xFF1A1A1A))
+            Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
         }
-        Text(text = value, fontSize = 14.sp, color = Color(0xFFE89E5B).copy(alpha = 0.8f))
+        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = onBackgroundColor.copy(alpha = 0.3f))
     }
 }
 
 @Preview(showBackground = true, widthDp = 393, heightDp = 853)
 @Composable
 fun ConfiguracionScreenPreview() {
-    val navController = rememberNavController()
-    ConfiguracionScreen(navController = navController)
+    DomumtechTheme {
+        ConfiguracionScreen(navController = rememberNavController())
+    }
 }
