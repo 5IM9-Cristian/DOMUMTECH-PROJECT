@@ -350,8 +350,8 @@ fun DrawerContent(
             DrawerItem(
                 icon = Icons.AutoMirrored.Filled.ExitToApp,
                 label = stringResource(R.string.cerrar_sesion),
-                labelColor = Color(0xFFE7000B),
-                iconTint = Color(0xFFE7000B),
+                labelColor = MaterialTheme.colorScheme.secondary,
+                iconTint = MaterialTheme.colorScheme.secondary,
                 onClick = { 
                     scope.launch { drawerState.close() }
                     onLogoutClick() 
@@ -436,7 +436,7 @@ fun ActionItem(title: String, subtitle: String, icon: ImageVector, onClick: () -
             }
             Column {
                 Text(text = title, style = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground))
-                Text(text = subtitle, style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.secondary))
+                Text(text = subtitle, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.secondary))
             }
         }
     }

@@ -135,8 +135,8 @@ fun RegistroScreen(navController: NavController) {
             Text(
                 text = stringResource(R.string.ingresa_datos),
                 style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.SemiBold,
                     color = secondaryColor,
                     textAlign = TextAlign.Center,
                 )

@@ -36,7 +36,7 @@ fun ColorScheme.virtualAssistenMessages():Color = if (isSystemInDarkTheme()) Col
 
 private val DarkColorScheme = darkColorScheme(
     primary = BarnRed,
-    secondary = Color(0xFFD66B3D), // Naranja quemado más visible
+    secondary = Color(0xFFC25E30), // Naranja quemado más oscuro para mejor contraste en fondo negro
     tertiary = BloodRed,
     background = Color(0xFF000000), // Negro total para modo oscuro
     surface = Color(0xFF121212), // Gris muy oscuro para tarjetas
@@ -46,7 +46,7 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Terracotta,
-    secondary = Color(0xFFD97D45), // Naranja un poco más profundo
+    secondary = Color(0xFFC25E30), // Naranja más profundo
     tertiary = AnalogousPink,
     background = BackgroundLight,
     surface = Color.White,

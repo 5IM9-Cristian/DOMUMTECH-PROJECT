@@ -94,7 +94,8 @@ fun LoginScreen(navController: NavController) {
             Text(
                 text = "Ingresa tus credenciales para continuar",
                 style = TextStyle(
-                    fontSize = 16.sp,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Medium,
                     color = secondaryTextColor,
                 )
             )
