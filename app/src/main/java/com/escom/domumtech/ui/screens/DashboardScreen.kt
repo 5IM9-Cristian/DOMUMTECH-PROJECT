@@ -270,6 +270,7 @@ fun DrawerContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(gradient)
+                .statusBarsPadding()
                 .padding(24.dp)
         ) {
             Column {

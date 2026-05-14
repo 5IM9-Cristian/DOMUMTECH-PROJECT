@@ -256,12 +256,6 @@ fun MemberItem(name: String, email: String, role: String, initial: String) {
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(text = role, fontSize = 12.sp, color = MaterialTheme.colorScheme.placeholderColor())
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .background(Color(0xFF05DF72), CircleShape)
-            )
         }
     }
 }

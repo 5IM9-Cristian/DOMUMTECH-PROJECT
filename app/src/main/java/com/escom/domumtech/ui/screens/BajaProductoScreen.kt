@@ -129,7 +129,7 @@ fun BajaProductoScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(mainGradient)
+                    .background(mainGradient, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
                     .statusBarsPadding()
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
