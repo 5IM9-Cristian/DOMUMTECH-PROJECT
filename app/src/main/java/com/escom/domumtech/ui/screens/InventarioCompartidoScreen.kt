@@ -3,6 +3,7 @@ package com.escom.domumtech.ui.screens
 import com.escom.domumtech.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -157,6 +158,7 @@ fun ActiveMemberAvatar(emoji: String, name: String, isActive: Boolean) {
 fun SharedProductCard(product: SharedProduct) {
     val cardColor = MaterialTheme.colorScheme.cardsColor()
     val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
+    val isDark = isSystemInDarkTheme()
 
     Card(
         modifier = Modifier
@@ -192,10 +194,14 @@ fun SharedProductCard(product: SharedProduct) {
             ) {
                 Box(
                     modifier = Modifier
-                        .border(1.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+                        .border(1.dp, if (isDark) Color.White.copy(alpha = 0.5f) else Color.Black.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
                         .padding(horizontal = 8.dp, vertical = 2.dp)
                 ) {
-                    Text(text = product.category, color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp)
+                    Text(
+                        text = product.category, 
+                        color = if (isDark) Color.White else Color.Black, 
+                        fontSize = 12.sp
+                    )
                 }
                 Text(
                     text = "${stringResource(R.string.actualizado_por)} ${product.updatedBy}",

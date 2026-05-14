@@ -101,7 +101,7 @@ fun AltaProductoScreen(navController: NavController) {
                     .fillMaxWidth()
                     .background(mainGradient)
                     .statusBarsPadding()
-                    .padding(24.dp)
+                    .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { navController.popBackStack() }) {
