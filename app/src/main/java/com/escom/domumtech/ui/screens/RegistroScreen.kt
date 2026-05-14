@@ -15,7 +15,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -50,26 +49,27 @@ fun RegistroScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    // SetupEdgeToEdge() // Deshabilitado para Preview
     
     val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
     val backgroundColor = MaterialTheme.colorScheme.background
     val onBackgroundColor = MaterialTheme.colorScheme.onBackground
     val cardColor = MaterialTheme.colorScheme.cardsColor()
+    val secondaryColor = MaterialTheme.colorScheme.secondary
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = backgroundColor),
+            .background(color = backgroundColor)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        // Cabecera con Gradiente
+        // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(130.dp)
-                .background(MaterialTheme.colorScheme.dynamicGradient())
+                .background(mainGradient)
                 .statusBarsPadding()
                 .padding(horizontal = 16.dp, vertical = 16.dp),
             contentAlignment = Alignment.CenterStart
@@ -98,7 +98,7 @@ fun RegistroScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(scrollState),
+                .padding(bottom = 40.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -109,7 +109,7 @@ fun RegistroScreen(navController: NavController) {
                 modifier = Modifier
                     .size(120.dp)
                     .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colorScheme.dynamicGradient(), RoundedCornerShape(20.dp)),
+                    .background(mainGradient, RoundedCornerShape(20.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -127,7 +127,7 @@ fun RegistroScreen(navController: NavController) {
                 style = TextStyle(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = onBackgroundColor,
                     textAlign = TextAlign.Center,
                 )
             )
@@ -137,14 +137,14 @@ fun RegistroScreen(navController: NavController) {
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = secondaryColor,
                     textAlign = TextAlign.Center,
                 )
             )
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Formulario
+            // Form
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -156,7 +156,7 @@ fun RegistroScreen(navController: NavController) {
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = onBackgroundColor,
                     )
                 )
 
@@ -169,16 +169,16 @@ fun RegistroScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        //Clic en el campo
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        //Cuando no se le ha dado clic al campo
-                        unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedBorderColor = onBackgroundColor.copy(alpha = 0.5f),
+                        unfocusedContainerColor = cardColor,
+                        focusedContainerColor = cardColor
                     ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Email,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
+                            tint = secondaryColor.copy(alpha = 0.7f),
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -191,7 +191,7 @@ fun RegistroScreen(navController: NavController) {
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = onBackgroundColor,
                     )
                 )
 
@@ -204,16 +204,16 @@ fun RegistroScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        //Clic en el campo
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        //Cuando no se le ha dado clic al campo
-                        unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedBorderColor = onBackgroundColor.copy(alpha = 0.5f),
+                        unfocusedContainerColor = cardColor,
+                        focusedContainerColor = cardColor
                     ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Lock,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
+                            tint = secondaryColor.copy(alpha = 0.7f),
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -226,7 +226,7 @@ fun RegistroScreen(navController: NavController) {
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = onBackgroundColor,
                     )
                 )
 
@@ -245,7 +245,7 @@ fun RegistroScreen(navController: NavController) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.dynamicGradient()),
+                            .background(mainGradient),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -265,16 +265,16 @@ fun RegistroScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f))
+                    HorizontalDivider(modifier = Modifier.weight(1f), color = secondaryColor.copy(alpha = 0.5f))
                     Text(
                         text = stringResource(R.string.continue_with),
                         modifier = Modifier.padding(horizontal = 12.dp),
                         style = TextStyle(
                             fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = secondaryColor,
                         )
                     )
-                    HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f))
+                    HorizontalDivider(modifier = Modifier.weight(1f), color = secondaryColor.copy(alpha = 0.5f))
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -285,8 +285,8 @@ fun RegistroScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(60.dp),
                     shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.5f)),
-                    colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+                    border = BorderStroke(1.dp, onBackgroundColor.copy(alpha = 0.1f)),
+                    colors = ButtonDefaults.outlinedButtonColors(containerColor = cardColor)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -310,13 +310,11 @@ fun RegistroScreen(navController: NavController) {
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = Color(0xFF3C4043),
+                                color = onBackgroundColor.copy(alpha = 0.8f),
                             )
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(40.dp))
             }
         }
     }

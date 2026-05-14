@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.escom.domumtech.R
 import com.escom.domumtech.ui.theme.DomumtechTheme
 import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
@@ -63,14 +65,14 @@ fun PlanesMembresiaScreen(navController: NavController) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver",
+                            contentDescription = stringResource(R.string.volver),
                             tint = Color.White,
                             modifier = Modifier.size(24.dp)
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = "Planes y Membresía",
+                        text = "Planes y membresía",
                         style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
                     )
                 }
@@ -84,11 +86,11 @@ fun PlanesMembresiaScreen(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Plan Actual",
+                        text = "Plan actual",
                         style = TextStyle(fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
                     )
                     Text(
-                        text = "Plan Familiar",
+                        text = "Plan familiar",
                         style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Medium, color = Color.White)
                     )
                 }
@@ -124,7 +126,7 @@ fun PlanesMembresiaScreen(navController: NavController) {
                             Spacer(modifier = Modifier.width(16.dp))
                             Column {
                                 Text(
-                                    text = "Plan Familiar Premium",
+                                    text = "Plan familiar premium",
                                     style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
                                 )
                                 Text(
@@ -190,7 +192,11 @@ fun PlanesMembresiaScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            SectionHeader(title = "Beneficios del Plan")
+            Text(
+                text = "Beneficios del plan",
+                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor),
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
             
             Card(
                 modifier = Modifier
@@ -238,7 +244,7 @@ fun PlanesMembresiaScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp))
+                    .background(cardColor, RoundedCornerShape(16.dp))
                     .border(1.5.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                     .padding(24.dp)
             ) {
@@ -255,7 +261,7 @@ fun PlanesMembresiaScreen(navController: NavController) {
                         }
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Acceso Beta Exclusivo",
+                            text = "Acceso beta exclusivo",
                             style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
                         )
                     }

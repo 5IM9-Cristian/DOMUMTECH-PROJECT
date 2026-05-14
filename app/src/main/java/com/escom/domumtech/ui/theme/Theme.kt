@@ -21,13 +21,13 @@ import androidx.core.view.WindowCompat
 @Composable
 fun ColorScheme.escaner():Color = if(isSystemInDarkTheme()) CiderSpice else EscanerColor
 @Composable
-fun ColorScheme.cardsColor():Color= if (isSystemInDarkTheme()) Color.DarkGray else Color.White
+fun ColorScheme.cardsColor():Color= if (isSystemInDarkTheme()) Color(0xFF121212) else Color.White
 @Composable
 fun ColorScheme.dynamicGradient(): Brush {
     return if (isSystemInDarkTheme()) GradientDark else GradientLight
 }
 @Composable
-fun ColorScheme.placeholderColor():Color = if (isSystemInDarkTheme()) Color.LightGray else Color.Gray
+fun ColorScheme.placeholderColor():Color = if (isSystemInDarkTheme()) Color.Gray else Color.Gray
 
 @Composable
 fun ColorScheme.usrMessages():Color = if (isSystemInDarkTheme()) Color(0xFF574F4F) else Color(0xFFFFF9F2)
@@ -36,20 +36,22 @@ fun ColorScheme.virtualAssistenMessages():Color = if (isSystemInDarkTheme()) Col
 
 private val DarkColorScheme = darkColorScheme(
     primary = BarnRed,
-    secondary = PottersClay,
+    secondary = Color(0xFFD66B3D), // Naranja quemado más visible
     tertiary = BloodRed,
-    background = BackgroundDark,
-    surface = Color(0xFF737373),
-    onBackground = Color.White
+    background = Color(0xFF000000), // Negro total para modo oscuro
+    surface = Color(0xFF121212), // Gris muy oscuro para tarjetas
+    onBackground = Color.White,
+    onSurface = Color.White
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Terracotta,
-    secondary = OrangeGradientEnd,
+    secondary = Color(0xFFD97D45), // Naranja un poco más profundo
     tertiary = AnalogousPink,
     background = BackgroundLight,
-    surface = Color(0xFFF0E9DA),
+    surface = Color.White,
     onBackground = Color.Black,
+    onSurface = Color.Black
 )
 
 @Composable
@@ -68,11 +70,11 @@ fun DomumtechTheme(
     }
     
     val view = LocalView.current
-    val activity = view.context.findActivity()
+    val context = view.context
     
-    if (activity != null) {
+    if (!view.isInEditMode) {
         SideEffect {
-            val window = activity.window
+            val window = (context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
             window.navigationBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme

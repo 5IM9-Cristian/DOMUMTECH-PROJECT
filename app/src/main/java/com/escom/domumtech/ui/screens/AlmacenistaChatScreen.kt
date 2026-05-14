@@ -141,7 +141,8 @@ fun ChatBubble(message: ChatMessage) {
         Surface(
             color = bubbleColor,
             shape = shape,
-            shadowElevation = 2.dp
+            shadowElevation = 2.dp,
+            tonalElevation = 1.dp
         ) {
             Text(
                 text = message.text,
