@@ -118,18 +118,38 @@ fun InventarioCompartidoScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             // Lista de Productos
-            val products = listOf(
-                SharedProduct("Arroz Integral", "Granos", 2, "María"),
-                SharedProduct("Aceite de Oliva", "Aceites", 1, "Juan"),
-                SharedProduct("Frijoles Negros", "Granos", 3, "María"),
-                SharedProduct("Pasta Italiana", "Pasta", 4, "Pedro"),
-                SharedProduct("Tomate en Lata", "Enlatados", 5, "Ana"),
-                SharedProduct("Leche Descremada", "Lácteos", 2, "María")
-            )
+            val products = emptyList<SharedProduct>() // Simular lista vacía para probar el Empty State
 
-            products.forEach { product ->
-                SharedProductCard(product)
-                Spacer(modifier = Modifier.height(12.dp))
+            if (products.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 60.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            modifier = Modifier.size(80.dp),
+                            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Aún no hay productos disponibles",
+                            style = TextStyle(fontSize = 16.sp, color = MaterialTheme.colorScheme.placeholderColor())
+                        )
+                        Text(
+                            text = "Pide a un miembro que registre algo",
+                            style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.placeholderColor().copy(alpha = 0.7f))
+                        )
+                    }
+                }
+            } else {
+                products.forEach { product ->
+                    SharedProductCard(product)
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
         }
     }

@@ -44,11 +44,20 @@ import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
 import com.escom.domumtech.ui.theme.placeholderColor
 
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+
 @Composable
 fun RegistroScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    
+    // Validaciones
+    val isEmailValid = email.isEmpty() || android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    val isPasswordValid = password.isEmpty() || password.length >= 6
     
     val mainGradient = MaterialTheme.colorScheme.dynamicGradient()
     val backgroundColor = MaterialTheme.colorScheme.background
@@ -85,7 +94,7 @@ fun RegistroScreen(navController: NavController) {
                     )
                 }
                 Text(
-                    text = stringResource(R.string.inicio_sesion),
+                    text = stringResource(R.string.registrarse), // Cambiado a registrarse
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
@@ -123,7 +132,7 @@ fun RegistroScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = stringResource(R.string.welcome_back),
+                text = "Crea tu cuenta",
                 style = TextStyle(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
@@ -168,6 +177,7 @@ fun RegistroScreen(navController: NavController) {
                     placeholder = { Text(stringResource(R.string.email_example), color = MaterialTheme.colorScheme.placeholderColor()) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
+                    isError = !isEmailValid,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = onBackgroundColor.copy(alpha = 0.5f),
@@ -183,6 +193,14 @@ fun RegistroScreen(navController: NavController) {
                         )
                     }
                 )
+                if (!isEmailValid) {
+                    Text(
+                        text = "Ingresa un correo electrónico válido",
+                        color = MaterialTheme.colorScheme.error,
+                        style = TextStyle(fontSize = 12.sp),
+                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -203,6 +221,8 @@ fun RegistroScreen(navController: NavController) {
                     placeholder = { Text(stringResource(R.string.password_example), color = MaterialTheme.colorScheme.placeholderColor()) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
+                    isError = !isPasswordValid,
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = onBackgroundColor.copy(alpha = 0.5f),
@@ -216,19 +236,25 @@ fun RegistroScreen(navController: NavController) {
                             tint = secondaryColor.copy(alpha = 0.7f),
                             modifier = Modifier.size(20.dp)
                         )
+                    },
+                    trailingIcon = {
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(
+                                imageVector = if (passwordVisible) Icons.Default.Info else Icons.Default.Lock,
+                                contentDescription = null,
+                                tint = secondaryColor.copy(alpha = 0.7f)
+                            )
+                        }
                     }
                 )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = stringResource(R.string.forgot_password),
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = onBackgroundColor,
+                if (!isPasswordValid) {
+                    Text(
+                        text = "La contraseña debe tener al menos 6 caracteres",
+                        color = MaterialTheme.colorScheme.error,
+                        style = TextStyle(fontSize = 12.sp),
+                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
                     )
-                )
+                }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -240,7 +266,8 @@ fun RegistroScreen(navController: NavController) {
                         .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
                     contentPadding = PaddingValues(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
+                    enabled = email.isNotBlank() && password.isNotBlank() && isEmailValid && isPasswordValid
                 ) {
                     Box(
                         modifier = Modifier

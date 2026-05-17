@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.escom.domumtech.R
+import com.escom.domumtech.navigation.Screen
 import com.escom.domumtech.ui.theme.DomumtechTheme
 import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
@@ -76,55 +77,109 @@ fun ListaComprasScreen(navController: NavController) {
         }
 
         Column(modifier = Modifier.padding(24.dp)) {
-            // Out of Stock Section
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Agotados",
-                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+            val isListEmpty = false // Cambia a true para ver el Empty State
+
+            if (isListEmpty) {
                 Box(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), CircleShape)
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                        .fillMaxWidth()
+                        .padding(vertical = 80.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "3", color = MaterialTheme.colorScheme.primary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Default.ShoppingCart,
+                            contentDescription = null,
+                            modifier = Modifier.size(100.dp),
+                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Text(
+                            text = "¡Tu despensa está llena!",
+                            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = onBackgroundColor)
+                        )
+                        Text(
+                            text = "No tienes nada pendiente por comprar",
+                            style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.placeholderColor())
+                        )
+                    }
+                }
+            } else {
+                // Out of Stock Section
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Agotados",
+                        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), CircleShape)
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                    ) {
+                        Text(text = "3", color = MaterialTheme.colorScheme.primary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ShoppingItemCard("Azúcar", "Endulzantes", 0)
+                ShoppingItemCard("Café molido", "Bebidas", 0)
+                ShoppingItemCard("Papel higiénico", "Limpieza", 0)
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Low Stock Section
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(20.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Próximos a agotar",
+                        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f), CircleShape)
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                    ) {
+                        Text(text = "4", color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ShoppingItemCard("Sal", "Condimentos", 1)
+                ShoppingItemCard("Harina", "Harinas", 1)
+                
+                Spacer(modifier = Modifier.height(48.dp))
+
+                // Botón para ver la nota de compras
+                Button(
+                    onClick = { navController.navigate(Screen.NotaCompras.route) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    contentPadding = PaddingValues(),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize().background(mainGradient),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Edit, contentDescription = null, tint = Color.White)
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text("Ver nota de compras", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ShoppingItemCard("Azúcar", "Endulzantes", 0)
-            ShoppingItemCard("Café Molido", "Bebidas", 0)
-            ShoppingItemCard("Papel Higiénico", "Limpieza", 0)
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Low Stock Section
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(20.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Próximos a agotar",
-                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Box(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f), CircleShape)
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                ) {
-                    Text(text = "4", color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ShoppingItemCard("Sal", "Condimentos", 1)
-            ShoppingItemCard("Harina", "Harinas", 1)
-            
             Spacer(modifier = Modifier.height(40.dp))
         }
     }

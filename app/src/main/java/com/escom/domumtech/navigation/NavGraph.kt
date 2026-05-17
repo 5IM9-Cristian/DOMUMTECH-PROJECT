@@ -26,6 +26,7 @@ sealed class Screen(val route: String) {
     object Ayuda : Screen("ayuda")
     object TerminosCondiciones : Screen("terminos_condiciones")
     object PoliticaPrivacidad : Screen("politica_privacidad")
+    object NotaCompras : Screen("nota_compras")
 }
 
 @Composable
@@ -53,6 +54,7 @@ fun NavGraph(navController: NavHostController) {
         composable(Screen.Ayuda.route) { AyudaScreen(navController) }
         composable(Screen.TerminosCondiciones.route) { TerminosCondicionesScreen(navController) }
         composable(Screen.PoliticaPrivacidad.route) { PoliticaPrivacidadScreen(navController) }
+        composable(Screen.NotaCompras.route) { NotaComprasScreen(navController) }
     }
 }
 

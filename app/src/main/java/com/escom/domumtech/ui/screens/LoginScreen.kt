@@ -34,6 +34,10 @@ import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
 import com.escom.domumtech.ui.theme.placeholderColor
 
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+
 @Composable
 fun LoginScreen(navController: NavController) {
     val scrollState = rememberScrollState()
@@ -45,6 +49,11 @@ fun LoginScreen(navController: NavController) {
     
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    
+    // Validaciones
+    val isEmailValid = email.isEmpty() || android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    val isPasswordValid = password.isEmpty() || password.length >= 6
 
     Column(
         modifier = Modifier
@@ -114,6 +123,7 @@ fun LoginScreen(navController: NavController) {
                 placeholder = { Text("tu@email.com", color = MaterialTheme.colorScheme.placeholderColor()) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
+                isError = !isEmailValid,
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = cardColor,
                     focusedContainerColor = cardColor,
@@ -124,6 +134,14 @@ fun LoginScreen(navController: NavController) {
                     Icon(Icons.Default.Email, contentDescription = null, tint = secondaryTextColor.copy(alpha = 0.7f))
                 }
             )
+            if (!isEmailValid) {
+                Text(
+                    text = "Ingresa un correo electrónico válido",
+                    color = MaterialTheme.colorScheme.error,
+                    style = TextStyle(fontSize = 12.sp),
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -139,6 +157,8 @@ fun LoginScreen(navController: NavController) {
                 placeholder = { Text("••••••••", color = MaterialTheme.colorScheme.placeholderColor()) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
+                isError = !isPasswordValid,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = cardColor,
                     focusedContainerColor = cardColor,
@@ -147,8 +167,25 @@ fun LoginScreen(navController: NavController) {
                 ),
                 leadingIcon = {
                     Icon(Icons.Default.Lock, contentDescription = null, tint = secondaryTextColor.copy(alpha = 0.7f))
+                },
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = if (passwordVisible) Icons.Default.Info else Icons.Default.Lock,
+                            contentDescription = null,
+                            tint = secondaryTextColor.copy(alpha = 0.7f)
+                        )
+                    }
                 }
             )
+            if (!isPasswordValid) {
+                Text(
+                    text = "La contraseña debe tener al menos 6 caracteres",
+                    color = MaterialTheme.colorScheme.error,
+                    style = TextStyle(fontSize = 12.sp),
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -173,7 +210,7 @@ fun LoginScreen(navController: NavController) {
                 contentPadding = PaddingValues(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 shape = RoundedCornerShape(16.dp),
-                enabled = email.isNotBlank() && password.isNotBlank()
+                enabled = email.isNotBlank() && password.isNotBlank() && isEmailValid && isPasswordValid
             ) {
                 Box(
                     modifier = Modifier
