@@ -1,5 +1,6 @@
 package com.escom.domumtech.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,11 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.escom.domumtech.navigation.Screen
 import com.escom.domumtech.ui.theme.DomumtechTheme
 import com.escom.domumtech.ui.theme.cardsColor
 import com.escom.domumtech.ui.theme.dynamicGradient
 import com.escom.domumtech.ui.theme.placeholderColor
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.launch
 
 @Composable
@@ -42,9 +44,19 @@ fun AltaProductoScreen(navController: NavController) {
     val cardColor = MaterialTheme.colorScheme.cardsColor()
     val placeholderColor = MaterialTheme.colorScheme.placeholderColor()
     val secondaryColor = MaterialTheme.colorScheme.secondary
-    
+
     var productName by remember { mutableStateOf("") }
     var quantity by remember { mutableIntStateOf(1) }
+    var codigoBarras by remember { mutableStateOf("") }
+
+    val scanLauncher = rememberLauncherForActivityResult(
+        contract = ScanContract()
+    ) { result ->
+        if (result.contents != null) {
+            codigoBarras = result.contents
+            productName = "Código: ${result.contents}"
+        }
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -56,7 +68,7 @@ fun AltaProductoScreen(navController: NavController) {
                     .padding(24.dp)
             ) {
                 Button(
-                    onClick = { 
+                    onClick = {
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 message = "¡Producto agregado con éxito!",
@@ -67,16 +79,19 @@ fun AltaProductoScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
-                        .shadow(elevation = 8.dp, shape = RoundedCornerShape(14.dp)),
+                        .shadow(8.dp, RoundedCornerShape(14.dp)),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     contentPadding = PaddingValues(),
                     shape = RoundedCornerShape(14.dp),
                     enabled = productName.isNotBlank()
                 ) {
                     Box(
-                        modifier = Modifier.fillMaxSize().background(
-                            if (productName.isNotBlank()) mainGradient else Brush.linearGradient(listOf(placeholderColor, placeholderColor))
-                        ),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                if (productName.isNotBlank()) mainGradient
+                                else Brush.linearGradient(listOf(placeholderColor, placeholderColor))
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -90,6 +105,7 @@ fun AltaProductoScreen(navController: NavController) {
             }
         }
     ) { paddingValues ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -97,10 +113,17 @@ fun AltaProductoScreen(navController: NavController) {
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
         ) {
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(mainGradient, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                    .background(
+                        mainGradient,
+                        shape = RoundedCornerShape(
+                            bottomStart = 32.dp,
+                            bottomEnd = 32.dp
+                        )
+                    )
                     .statusBarsPadding()
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
@@ -113,49 +136,91 @@ fun AltaProductoScreen(navController: NavController) {
                             modifier = Modifier.size(24.dp)
                         )
                     }
+
                     Spacer(modifier = Modifier.width(16.dp))
+
                     Text(
                         text = "Alta de Producto",
-                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.White)
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White
+                        )
                     )
                 }
             }
 
             Column(modifier = Modifier.padding(24.dp)) {
+
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
+                        .shadow(6.dp, RoundedCornerShape(14.dp)),
                     shape = RoundedCornerShape(14.dp),
                     colors = CardDefaults.cardColors(containerColor = cardColor)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
+
                         Text(
-                            text = "Escáner OCR",
-                            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
+                            text = "Escáner de Código de Barras",
+                            style = TextStyle(
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = onBackgroundColor
+                            )
                         )
+
                         Spacer(modifier = Modifier.height(16.dp))
+
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(160.dp)
                                 .background(backgroundColor, RoundedCornerShape(14.dp))
-                                .border(1.5.dp, secondaryColor.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
-                                .clickable { productName = "Leche Entera" },
+                                .border(
+                                    1.5.dp,
+                                    secondaryColor.copy(alpha = 0.4f),
+                                    RoundedCornerShape(14.dp)
+                                )
+                                .clickable {
+                                    val options = ScanOptions()
+                                    options.setPrompt("Escanea el código de barras")
+                                    options.setBeepEnabled(true)
+                                    options.setOrientationLocked(false)
+                                    options.setBarcodeImageEnabled(true)
+                                    scanLauncher.launch(options)
+                                },
                             contentAlignment = Alignment.Center
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
                                 Icon(
                                     imageVector = Icons.Default.Search,
                                     contentDescription = null,
                                     modifier = Modifier.size(48.dp),
                                     tint = onBackgroundColor
                                 )
+
                                 Spacer(modifier = Modifier.height(12.dp))
+
                                 Text(
                                     text = "Toca para escanear",
-                                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = secondaryColor)
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = secondaryColor
+                                    )
                                 )
+
+                                if (codigoBarras.isNotBlank()) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    Text(
+                                        text = "Código: $codigoBarras",
+                                        color = secondaryColor,
+                                        fontSize = 14.sp
+                                    )
+                                }
                             }
                         }
                     }
@@ -166,20 +231,29 @@ fun AltaProductoScreen(navController: NavController) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .shadow(elevation = 6.dp, shape = RoundedCornerShape(14.dp)),
+                        .shadow(6.dp, RoundedCornerShape(14.dp)),
                     shape = RoundedCornerShape(14.dp),
                     colors = CardDefaults.cardColors(containerColor = cardColor)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
+
                         Text(
                             text = "Nombre del Producto",
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = onBackgroundColor
+                            )
                         )
+
                         Spacer(modifier = Modifier.height(8.dp))
+
                         OutlinedTextField(
                             value = productName,
                             onValueChange = { productName = it },
-                            placeholder = { Text("Ej: Arroz Integral", color = placeholderColor) },
+                            placeholder = {
+                                Text("Ej: Arroz Integral", color = placeholderColor)
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(14.dp),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -193,9 +267,15 @@ fun AltaProductoScreen(navController: NavController) {
 
                         Text(
                             text = "Cantidad",
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = onBackgroundColor
+                            )
                         )
+
                         Spacer(modifier = Modifier.height(16.dp))
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -204,23 +284,43 @@ fun AltaProductoScreen(navController: NavController) {
                                 onClick = { if (quantity > 1) quantity-- },
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.7f), RoundedCornerShape(8.dp))
+                                    .background(
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                                        RoundedCornerShape(8.dp)
+                                    )
                             ) {
-                                Box(modifier = Modifier.width(16.dp).height(2.dp).background(Color.White))
+                                Box(
+                                    modifier = Modifier
+                                        .width(16.dp)
+                                        .height(2.dp)
+                                        .background(Color.White)
+                                )
                             }
+
                             Text(
                                 text = quantity.toString(),
-                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = onBackgroundColor)
+                                style = TextStyle(
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = onBackgroundColor
+                                )
                             )
+
                             IconButton(
                                 onClick = { quantity++ },
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .background(secondaryColor.copy(alpha = 0.8f), RoundedCornerShape(8.dp))
+                                    .background(
+                                        secondaryColor.copy(alpha = 0.8f),
+                                        RoundedCornerShape(8.dp)
+                                    )
                             ) {
-                                Icon(Icons.Default.Add, contentDescription = "Más", tint = Color.White)
-                            }
-                        }
+                                Icon(
+                                    Icons.Default.Add,
+                                    contentDescription = "Más",
+                                    tint = Color.White
+                                )
+                            } }
                     }
                 }
             }

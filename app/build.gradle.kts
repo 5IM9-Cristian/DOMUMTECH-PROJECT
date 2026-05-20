@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
 }
